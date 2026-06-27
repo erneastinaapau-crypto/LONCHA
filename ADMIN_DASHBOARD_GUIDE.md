@@ -1,7 +1,7 @@
 # 🎛️ Admin Dashboard Guide
 
 ## Overview
-The Osebo Shoes app includes a comprehensive admin dashboard for managing products, orders, and customers.
+The LONCHA app includes a comprehensive admin dashboard for managing modern kitchen designs, interior products, orders, and customers.
 
 ---
 

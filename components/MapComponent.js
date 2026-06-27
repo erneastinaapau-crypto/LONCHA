@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Platform, ActivityIndicator } from 'react-native';
 
 /**
- * MapComponent - Leaflet Map Integration for Osebo-Shoes
+ * MapComponent - Leaflet Map Integration for LONCHA
  * 
  * This component integrates Leaflet maps for web platform.
  * For native platforms, it shows a placeholder with instructions.
@@ -13,7 +13,7 @@ import { View, Text, StyleSheet, Platform, ActivityIndicator } from 'react-nativ
  * - markers: array of {lat, lng, title, description} - markers to display
  * - onMarkerClick: function - callback when marker is clicked
  * - height: number or string - map container height (default: 400)
- * - showStoreLocations: boolean - whether to show Osebo-Shoes store locations
+ * - showStoreLocations: boolean - whether to show LONCHA store locations
  */
 
 const MapComponent = ({
@@ -30,19 +30,19 @@ const MapComponent = ({
   const [Popup, setPopup] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Default store locations for Osebo-Shoes
+  // Default store locations for LONCHA
   const defaultStoreLocations = [
     {
       lat: 5.6037,
       lng: -0.1870,
-      title: 'Osebo-Shoes Main Store',
+      title: 'LONCHA Main Store',
       description: 'Visit our flagship store in Accra',
     },
     {
       lat: 5.5560,
       lng: -0.1969,
-      title: 'Osebo-Shoes Osu Branch',
-      description: 'Find us in Osu for premium footwear',
+      title: 'LONCHA Osu Branch',
+      description: 'Find us in Osu for premium kitchen designs',
     },
   ];
 
@@ -91,7 +91,7 @@ const MapComponent = ({
         <View style={styles.nativeMessage}>
           <Text style={styles.nativeTitle}>Map View</Text>
           <Text style={styles.nativeText}>
-            Interactive maps are available on the web version of Osebo-Shoes.
+            Interactive maps are available on the web version of LONCHA.
           </Text>
           <Text style={styles.nativeText}>
             Visit our stores at:

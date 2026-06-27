@@ -29,7 +29,7 @@ export const geocodeAddress = async (address) => {
 
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Osebo-Shoes-App/1.0', // Nominatim requires User-Agent
+        'User-Agent': 'LONCHA-App/1.0', // Nominatim requires User-Agent
       },
     });
 

@@ -1,5 +1,5 @@
 # ========================================
-# Create Backup Folder for Osebo Shoes App
+# Create Backup Folder for LONCHA App
 # ========================================
 # This script copies only the important source files
 # (not node_modules, .expo, etc.) to a backup folder
@@ -11,7 +11,7 @@ Write-Host ""
 
 # Source and destination paths
 $sourceDir = Get-Location
-$backupDir = Join-Path $sourceDir "osebo-shoes-backup"
+$backupDir = Join-Path $sourceDir "loncha-backup"
 
 # Create backup directory
 Write-Host "Creating backup folder: $backupDir" -ForegroundColor Yellow

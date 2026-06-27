@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "Osebo-Shoes",
-    "slug": "osebo-shoes",
+    "name": "LONCHA",
+    "slug": "loncha",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "scheme": "osebo-shoes",
+    "scheme": "loncha",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -14,15 +14,15 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.osebo.shoes",
+      "bundleIdentifier": "com.loncha.app",
       "buildNumber": "1",
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Allow Osebo-Shoes to access your photos.",
-        "NSCameraUsageDescription": "Allow Osebo-Shoes to use your camera."
+        "NSPhotoLibraryUsageDescription": "Allow LONCHA to access your photos.",
+        "NSCameraUsageDescription": "Allow LONCHA to use your camera."
       }
     },
     "android": {
-      "package": "com.osebo.shoes",
+      "package": "com.loncha.app",
       "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#4A0404",
@@ -39,9 +39,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "name": "Osebo-Shoes",
-      "shortName": "Osebo",
-      "description": "Premium footwear for every occasion. Shop the finest shoes, sneakers and sandals at Osebo-Shoes."
+      "name": "LONCHA",
+      "shortName": "LONCHA",
+      "description": "Premium modern kitchen design and interior solutions. Shop the finest kitchen designs at LONCHA."
     },
     "extra": {
       "eas": {

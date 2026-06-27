@@ -1,4 +1,4 @@
--- Create delivery tracking table for Osebo-Shoes
+-- Create delivery tracking table for LONCHA
 -- This stores delivery addresses, rider locations, and tracking status
 
 -- Delivery Addresses Table

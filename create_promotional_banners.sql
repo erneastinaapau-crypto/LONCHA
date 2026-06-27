@@ -1,5 +1,5 @@
 -- =============================================================
--- Osebo-Shoes — Promotional Banners Table
+-- LONCHA — Promotional Banners Table
 -- Run this in: Supabase Dashboard → SQL Editor → New Query
 -- =============================================================
 

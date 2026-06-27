@@ -3,41 +3,41 @@ TRUNCATE TABLE public.products CASCADE;
 TRUNCATE TABLE public.categories CASCADE;
 
 -- Insert Categories
-INSERT INTO public.categories (id, name, image_url, description, created_at) VALUES
-  (1, 'Sneakers', 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400', 'Casual and athletic sneakers', NOW()),
-  (2, 'Boots', 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=400', 'Rugged and stylish boots', NOW()),
-  (3, 'Formal', 'https://images.unsplash.com/photo-1614252369475-531eba835eb1?w=400', 'Dress shoes and oxfords', NOW()),
-  (4, 'Sandals', 'https://images.unsplash.com/photo-1603487742131-4160ec999306?w=400', 'Comfortable sandals and slides', NOW());
+INSERT INTO public.categories (name, image_url, description, created_at) VALUES
+  ('Modern Kitchens', 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400', 'Contemporary kitchen designs', NOW()),
+  ('Kitchen Cabinets', 'https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=400', 'Custom cabinetry solutions', NOW()),
+  ('Countertops', 'https://images.unsplash.com/photo-1556912173-3db996ea6c3d?w=400', 'Premium countertop materials', NOW()),
+  ('Interior Design', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=400', 'Professional interior design services', NOW());
 
--- Insert Products (20 mock shoes)
-INSERT INTO public.products (id, name, price, has_weights, tag, category_id, description, image_url, stock_quantity, position, created_at) VALUES
-  -- Sneakers
-  (1, 'Air Max Classic', 129.99, false, null, 1, 'Iconic retro sneaker with visible air cushioning', 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600', 45, 1, NOW()),
-  (2, 'Urban Runner Pro', 149.99, false, 'BEST SELLER', 1, 'High-performance running shoe with breathable mesh', 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600', 32, 2, NOW()),
-  (3, 'Street Style Low', 89.99, false, null, 1, 'Minimalist low-top sneaker for everyday wear', 'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600', 60, 3, NOW()),
-  (4, 'High Top Elite', 139.99, false, null, 1, 'Premium high-top sneaker with ankle support', 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600', 28, 4, NOW()),
-  (5, 'Canvas Classic', 64.99, false, null, 1, 'Timeless canvas sneaker in multiple colors', 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600', 75, 5, NOW()),
+-- Insert Products (20 mock kitchen/interior items)
+INSERT INTO public.products (name, price, has_weights, tag, category_id, description, image_url, stock_quantity, position, created_at) VALUES
+  -- Modern Kitchens
+  ('Contemporary Kitchen Set', 2500.00, false, null, (SELECT id FROM public.categories WHERE name = 'Modern Kitchens'), 'Complete modern kitchen with sleek cabinetry and appliances', 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600', 45, 1, NOW()),
+  ('Luxury Kitchen Design', 3500.00, false, 'BEST SELLER', (SELECT id FROM public.categories WHERE name = 'Modern Kitchens'), 'High-end kitchen with premium finishes and smart features', 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?w=600', 32, 2, NOW()),
+  ('Minimalist Kitchen', 1800.00, false, null, (SELECT id FROM public.categories WHERE name = 'Modern Kitchens'), 'Clean and simple modern kitchen design', 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600', 60, 3, NOW()),
+  ('Open Concept Kitchen', 2200.00, false, null, (SELECT id FROM public.categories WHERE name = 'Modern Kitchens'), 'Spacious open-plan kitchen with island', 'https://images.unsplash.com/photo-1556909172-e856b4ecf5e8?w=600', 28, 4, NOW()),
+  ('Smart Kitchen Setup', 2800.00, false, null, (SELECT id FROM public.categories WHERE name = 'Modern Kitchens'), 'Integrated smart technology kitchen solution', 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?w=600', 75, 5, NOW()),
   
-  -- Boots
-  (6, 'Desert Explorer', 189.99, false, 'BEST SELLER', 2, 'Durable suede desert boot for adventure', 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=600', 22, 6, NOW()),
-  (7, 'Combat Tactical', 169.99, false, null, 2, 'Military-inspired combat boot with reinforced sole', 'https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=600', 18, 7, NOW()),
-  (8, 'Chelsea Premium', 219.99, false, null, 2, 'Elegant leather Chelsea boot with elastic sides', 'https://images.unsplash.com/photo-1605812860427-4024433a70fd?w=600', 15, 8, NOW()),
-  (9, 'Hiking Trail Pro', 159.99, false, null, 2, 'Waterproof hiking boot with grip sole', 'https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=600', 30, 9, NOW()),
-  (10, 'Winter Warmth', 199.99, false, null, 2, 'Insulated winter boot for cold weather', 'https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?w=600', 25, 10, NOW()),
+  -- Kitchen Cabinets
+  ('Custom Oak Cabinets', 1200.00, false, 'BEST SELLER', (SELECT id FROM public.categories WHERE name = 'Kitchen Cabinets'), 'Handcrafted solid oak cabinets with soft-close hardware', 'https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=600', 22, 6, NOW()),
+  ('Modern White Cabinets', 950.00, false, null, (SELECT id FROM public.categories WHERE name = 'Kitchen Cabinets'), 'Sleek white lacquer cabinets with minimalist design', 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600', 18, 7, NOW()),
+  ('Dark Walnut Cabinets', 1400.00, false, null, (SELECT id FROM public.categories WHERE name = 'Kitchen Cabinets'), 'Rich walnut cabinets with premium hardware', 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?w=600', 15, 8, NOW()),
+  ('Shaker Style Cabinets', 850.00, false, null, (SELECT id FROM public.categories WHERE name = 'Kitchen Cabinets'), 'Classic shaker cabinets with modern twist', 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600', 30, 9, NOW()),
+  ('Glass Door Cabinets', 1100.00, false, null, (SELECT id FROM public.categories WHERE name = 'Kitchen Cabinets'), 'Contemporary cabinets with glass display doors', 'https://images.unsplash.com/photo-1556909172-e856b4ecf5e8?w=600', 25, 10, NOW()),
   
-  -- Formal
-  (11, 'Oxford Classic', 179.99, false, 'BEST SELLER', 3, 'Traditional cap-toe oxford in polished leather', 'https://images.unsplash.com/photo-1614252369475-531eba835eb1?w=600', 35, 11, NOW()),
-  (12, 'Derby Elegance', 169.99, false, null, 3, 'Open-laced derby shoe for formal occasions', 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600', 28, 12, NOW()),
-  (13, 'Monk Strap', 199.99, false, null, 3, 'Double monk strap shoe with buckle detail', 'https://images.unsplash.com/photo-1582897085656-c636d006a246?w=600', 20, 13, NOW()),
-  (14, 'Loafer Luxury', 149.99, false, null, 3, 'Premium leather penny loafer', 'https://images.unsplash.com/photo-1624351589804-e48d48f4b5b8?w=600', 40, 14, NOW()),
-  (15, 'Brogue Wingtip', 189.99, false, null, 3, 'Full brogue wingtip with decorative perforations', 'https://images.unsplash.com/photo-1622434641406-a158123450f9?w=600', 18, 15, NOW()),
+  -- Countertops
+  ('Granite Countertop Set', 1500.00, false, 'BEST SELLER', (SELECT id FROM public.categories WHERE name = 'Countertops'), 'Premium granite countertops with elegant edge profiles', 'https://images.unsplash.com/photo-1556912173-3db996ea6c3d?w=600', 35, 11, NOW()),
+  ('Quartz Countertops', 1300.00, false, null, (SELECT id FROM public.categories WHERE name = 'Countertops'), 'Durable quartz countertops in various colors', 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600', 28, 12, NOW()),
+  ('Marble Countertops', 1800.00, false, null, (SELECT id FROM public.categories WHERE name = 'Countertops'), 'Luxurious marble countertops with unique patterns', 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?w=600', 20, 13, NOW()),
+  ('Butcher Block Countertops', 600.00, false, null, (SELECT id FROM public.categories WHERE name = 'Countertops'), 'Warm wood butcher block countertops', 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600', 40, 14, NOW()),
+  ('Concrete Countertops', 900.00, false, null, (SELECT id FROM public.categories WHERE name = 'Countertops'), 'Modern industrial concrete countertops', 'https://images.unsplash.com/photo-1556912173-3db996ea6c3d?w=600', 18, 15, NOW()),
   
-  -- Sandals
-  (16, 'Beach Slide', 39.99, false, null, 4, 'Comfortable rubber slide for casual wear', 'https://images.unsplash.com/photo-1603487742131-4160ec999306?w=600', 90, 16, NOW()),
-  (17, 'Sport Sandal', 69.99, false, 'BEST SELLER', 4, 'Athletic sandal with adjustable straps', 'https://images.unsplash.com/photo-1621665422384-c0c7fe942c4e?w=600', 55, 17, NOW()),
-  (18, 'Leather Flip', 49.99, false, null, 4, 'Premium leather flip-flop with arch support', 'https://images.unsplash.com/photo-1584827091240-554ac08916d3?w=600', 70, 18, NOW()),
-  (19, 'Hiking Sandal', 79.99, false, null, 4, 'Durable outdoor sandal with toe protection', 'https://images.unsplash.com/photo-1631082262179-faee5ba59ec2?w=600', 42, 19, NOW()),
-  (20, 'Slide Comfort', 44.99, false, null, 4, 'Cushioned slide with contoured footbed', 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600', 65, 20, NOW());
+  -- Interior Design
+  ('Living Room Design Package', 800.00, false, null, (SELECT id FROM public.categories WHERE name = 'Interior Design'), 'Complete living room design consultation', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600', 90, 16, NOW()),
+  ('Bedroom Design Service', 600.00, false, 'BEST SELLER', (SELECT id FROM public.categories WHERE name = 'Interior Design'), 'Professional bedroom design and space planning', 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600', 55, 17, NOW()),
+  ('Kitchen Design Consultation', 500.00, false, null, (SELECT id FROM public.categories WHERE name = 'Interior Design'), 'Expert kitchen design advice and planning', 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?w=600', 70, 18, NOW()),
+  ('Full Home Interior Design', 2500.00, false, null, (SELECT id FROM public.categories WHERE name = 'Interior Design'), 'Complete home interior design package', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600', 42, 19, NOW()),
+  ('Office Space Design', 450.00, false, null, (SELECT id FROM public.categories WHERE name = 'Interior Design'), 'Modern home office design solutions', 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600', 65, 20, NOW());
 
 -- Verify insertion
 SELECT 

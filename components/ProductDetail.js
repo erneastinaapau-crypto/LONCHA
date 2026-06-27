@@ -40,53 +40,45 @@ const darkPalette = {
 export default function ProductDetail({ product, visible, onClose, onAddToCart, onSetCartQuantity, cartItems = [], isUserDarkMode }) {
   const { width, height } = useWindowDimensions();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [quantity, setQuantity] = useState(1);
   const [selectedWeight, setSelectedWeight] = useState('US 9');
-  const [showQuantityControls, setShowQuantityControls] = useState(false);
+  const [localQuantity, setLocalQuantity] = useState(1);
   const scrollViewRef = useRef(null);
 
-  // Reset state when product changes or modal opens/closes
-  useEffect(() => {
-    if (visible && product) {
-      const defaultWeight = 'US 9';
-      // Check if this product (with selected weight) is already in cart
-      const cartItem = cartItems.find(
-        (item) => item.id === product.id && item.selectedWeight === (product.hasWeights ? defaultWeight : 'unit')
-      );
-      
-      if (cartItem) {
-        // Product is in cart - show quantity controls with cart quantity
-        setShowQuantityControls(true);
-        setQuantity(cartItem.quantity);
-      } else {
-        // Product not in cart - show "Add to Cart" button
-        setShowQuantityControls(false);
-        setQuantity(1);
-      }
-      
-      // Reset other states
-      setSelectedImageIndex(0);
-      setSelectedWeight(defaultWeight);
-    }
-  }, [visible, product?.id, cartItems]); // Also watch cartItems for updates
+  // Check if current product+weight is in cart
+  const isInCart = useMemo(() => {
+    if (!product) return false;
+    return cartItems.some(
+      (item) => item.id === product.id && item.selectedWeight === (product.hasWeights ? selectedWeight : 'unit')
+    );
+  }, [product?.id, selectedWeight, cartItems]);
 
-  // Update quantity when weight/size changes
+  // Get cart item quantity if in cart
+  const cartQuantity = useMemo(() => {
+    if (!product) return 1;
+    const cartItem = cartItems.find(
+      (item) => item.id === product.id && item.selectedWeight === (product.hasWeights ? selectedWeight : 'unit')
+    );
+    return cartItem?.quantity || 1;
+  }, [product?.id, selectedWeight, cartItems]);
+
+  // Sync local quantity with cart
   useEffect(() => {
     if (visible && product) {
-      const cartItem = cartItems.find(
-        (item) => item.id === product.id && item.selectedWeight === (product.hasWeights ? selectedWeight : 'unit')
-      );
-      
-      if (cartItem) {
-        // This weight is in cart - show controls with cart quantity
-        setShowQuantityControls(true);
-        setQuantity(cartItem.quantity);
-      } else if (showQuantityControls) {
-        // This weight is NOT in cart but controls are showing - reset to 1
-        setQuantity(1);
+      if (isInCart) {
+        setLocalQuantity(cartQuantity);
+      } else {
+        setLocalQuantity(1);
       }
     }
-  }, [selectedWeight]); // Watch for weight changes
+  }, [visible, product?.id, isInCart, cartQuantity]);
+
+  // Reset when modal opens
+  useEffect(() => {
+    if (visible && product) {
+      setSelectedImageIndex(0);
+      setSelectedWeight('US 9');
+    }
+  }, [visible, product?.id]);
 
   // Calculate current price based on weight selection - MUST be before early return
   const currentPrice = useMemo(() => {
@@ -97,7 +89,7 @@ export default function ProductDetail({ product, visible, onClose, onAddToCart, 
     return product.price_1kg || 0;
   }, [selectedWeight, product]);
 
-  const totalPrice = currentPrice * quantity;
+  const totalPrice = currentPrice * localQuantity;
 
   // Get product images - MUST be after hooks
   const images = useMemo(() => {
@@ -179,8 +171,14 @@ export default function ProductDetail({ product, visible, onClose, onAddToCart, 
       Alert.alert('Out of Stock', 'This product is currently unavailable');
       return;
     }
-    setShowQuantityControls(true);
-    setQuantity(1); // Start with quantity 1
+    // Add to cart immediately with current quantity
+    const productWithImage = {
+      ...product,
+      image: product.image || product.product_images?.[0]?.url || product.product_images?.[0]?.image_url || 'https://via.placeholder.com/600x600?text=No+Image'
+    };
+    onSetCartQuantity?.(productWithImage, product.hasWeights ? selectedWeight : 'unit', currentPrice, localQuantity);
+    
+    Alert.alert('Added to Cart', `${localQuantity} × ${product.name} added to your cart`, [{ text: 'OK' }]);
   };
 
   return (
@@ -364,44 +362,38 @@ export default function ProductDetail({ product, visible, onClose, onAddToCart, 
               <View style={styles.quantityContainer}>
                 <Text style={[styles.sectionTitle, { color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal }]}>Quantity</Text>
                 
-                {!showQuantityControls ? (
-                  /* Add to Cart Button - Shows initially */
-                  <Pressable
-                    style={[
-                      styles.initialAddToCartButton,
-                      product.stock_quantity === 0 && styles.initialAddToCartButtonDisabled,
-                      { backgroundColor: isUserDarkMode ? darkPalette.oxblood : palette.oxblood }
-                    ]}
-                    onPress={handleAddToCartClick}
-                    disabled={product.stock_quantity === 0}
-                  >
-                    <FontAwesome name="shopping-cart" size={18} color="#FFF" />
-                    <Text style={styles.initialAddToCartText}>
-                      {product.stock_quantity === 0
-                        ? 'Out of Stock' 
-                        : 'Add to Cart'}
-                    </Text>
-                  </Pressable>
-                ) : (
-                  /* Quantity Controls - Shows after clicking Add to Cart */
+                {isInCart ? (
+                  /* Quantity Controls - Shows when item is in cart */
                   <View style={styles.quantityControls}>
                     <Pressable 
-                      onPress={decrementQuantity} 
+                      onPress={() => {
+                        const productWithImage = {
+                          ...product,
+                          image: product.image || product.product_images?.[0]?.url || product.product_images?.[0]?.image_url || 'https://via.placeholder.com/600x600?text=No+Image'
+                        };
+                        onSetCartQuantity?.(productWithImage, product.hasWeights ? selectedWeight : 'unit', currentPrice, localQuantity - 1);
+                      }}
                       style={[
                         styles.quantityButton, 
-                        quantity <= 1 && styles.quantityButtonDisabled,
+                        localQuantity <= 1 && styles.quantityButtonDisabled,
                         isUserDarkMode && {
                           backgroundColor: darkPalette.surface,
                           borderColor: '#444'
                         }
                       ]}
-                      disabled={quantity <= 1}
+                      disabled={localQuantity <= 1}
                     >
-                      <FontAwesome name="minus" size={16} color={quantity <= 1 ? '#CCC' : (isUserDarkMode ? darkPalette.charcoal : palette.charcoal)} />
+                      <FontAwesome name="minus" size={16} color={localQuantity <= 1 ? '#CCC' : (isUserDarkMode ? darkPalette.charcoal : palette.charcoal)} />
                     </Pressable>
-                    <Text style={[styles.quantityText, { color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal }]}>{quantity}</Text>
+                    <Text style={[styles.quantityText, { color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal }]}>{localQuantity}</Text>
                     <Pressable 
-                      onPress={incrementQuantity} 
+                      onPress={() => {
+                        const productWithImage = {
+                          ...product,
+                          image: product.image || product.product_images?.[0]?.url || product.product_images?.[0]?.image_url || 'https://via.placeholder.com/600x600?text=No+Image'
+                        };
+                        onSetCartQuantity?.(productWithImage, product.hasWeights ? selectedWeight : 'unit', currentPrice, localQuantity + 1);
+                      }}
                       style={[
                         styles.quantityButton,
                         isUserDarkMode && {
@@ -413,6 +405,35 @@ export default function ProductDetail({ product, visible, onClose, onAddToCart, 
                       <FontAwesome name="plus" size={16} color={isUserDarkMode ? darkPalette.charcoal : palette.charcoal} />
                     </Pressable>
                   </View>
+                ) : (
+                  /* Add to Cart Button - Shows when not in cart */
+                  <Pressable
+                    style={[
+                      styles.initialAddToCartButton,
+                      product.stock_quantity === 0 && styles.initialAddToCartButtonDisabled,
+                      { backgroundColor: isUserDarkMode ? darkPalette.oxblood : palette.oxblood }
+                    ]}
+                    onPress={() => {
+                      if (product.stock_quantity === 0) {
+                        Alert.alert('Out of Stock', 'This product is currently unavailable');
+                        return;
+                      }
+                      const productWithImage = {
+                        ...product,
+                        image: product.image || product.product_images?.[0]?.url || product.product_images?.[0]?.image_url || 'https://via.placeholder.com/600x600?text=No+Image'
+                      };
+                      onSetCartQuantity?.(productWithImage, product.hasWeights ? selectedWeight : 'unit', currentPrice, localQuantity);
+                      Alert.alert('Added to Cart', `${localQuantity} × ${product.name} added to your cart`, [{ text: 'OK' }]);
+                    }}
+                    disabled={product.stock_quantity === 0}
+                  >
+                    <FontAwesome name="shopping-cart" size={18} color="#FFF" />
+                    <Text style={styles.initialAddToCartText}>
+                      {product.stock_quantity === 0
+                        ? 'Out of Stock' 
+                        : 'Add to Cart'}
+                    </Text>
+                  </Pressable>
                 )}
                 
                 {product.stock_quantity !== undefined && product.stock_quantity !== null && (
@@ -434,72 +455,46 @@ export default function ProductDetail({ product, visible, onClose, onAddToCart, 
             </View>
           </ScrollView>
 
-          {/* Add to Cart Button */}
-          <View style={[styles.footer, {
-            backgroundColor: isUserDarkMode ? darkPalette.surface : palette.surface,
-            borderTopColor: isUserDarkMode ? '#333' : '#E5E5E5'
-          }]}>
-            <Pressable
-              style={[
-                styles.addToCartButton,
-                (!showQuantityControls || product.stock_quantity === 0) && styles.addToCartButtonDisabled,
-                { backgroundColor: isUserDarkMode ? darkPalette.oxblood : palette.oxblood }
-              ]}
-              onPress={() => {
-                if (!showQuantityControls) {
-                  Alert.alert('Select Quantity', 'Please click "Add to Cart" button first to select quantity');
-                  return;
-                }
-                if (product.stock_quantity === 0) {
-                  Alert.alert('Out of Stock', 'This product is currently unavailable');
-                  return;
-                }
-                
-                // Check if item is already in cart (for display message only)
-                const existingCartItem = cartItems.find(
-                  (item) => item.id === product.id && item.selectedWeight === (product.hasWeights ? selectedWeight : 'unit')
-                );
-                
-                // Ensure product has image field (might be in product_images array)
-                const productWithImage = {
-                  ...product,
-                  image: product.image || product.product_images?.[0]?.url || product.product_images?.[0]?.image_url || 'https://via.placeholder.com/600x600?text=No+Image'
-                };
-                
-                // ALWAYS use setCartQuantity - SET the quantity to what's displayed
-                // Never add to existing - always replace with the displayed quantity
-                onSetCartQuantity?.(productWithImage, product.hasWeights ? selectedWeight : 'unit', currentPrice, quantity);
-                
-                // Show success feedback
-                Alert.alert(
-                  existingCartItem ? 'Cart Updated' : 'Added to Cart', 
-                  existingCartItem 
-                    ? `${product.name} quantity updated to ${quantity}`
-                    : `${quantity} × ${product.name} added to your cart`,
-                  [{ text: 'OK' }]
-                );
-                
-                onClose(); // useEffect will reset state when modal closes
-              }}
-              disabled={!showQuantityControls || product.stock_quantity === 0}
-            >
-              <FontAwesome name="shopping-cart" size={20} color="#FFF" />
-              <Text style={styles.addToCartText}>
-                {product.stock_quantity === 0
-                  ? 'Out of Stock' 
-                  : !showQuantityControls
-                    ? 'Select Quantity First'
-                    : (() => {
-                        const existingCartItem = cartItems.find(
-                          (item) => item.id === product.id && item.selectedWeight === (product.hasWeights ? selectedWeight : 'unit')
-                        );
-                        return existingCartItem 
-                          ? `Update Cart (${quantity}) • GHC ${totalPrice.toFixed(2)}`
-                          : `Add ${quantity} to Cart • GHC ${totalPrice.toFixed(2)}`;
-                      })()}
-              </Text>
-            </Pressable>
-          </View>
+          {/* Add to Cart Button - Always show when in cart */}
+          {isInCart && (
+            <View style={[styles.footer, {
+              backgroundColor: isUserDarkMode ? darkPalette.surface : palette.surface,
+              borderTopColor: isUserDarkMode ? '#333' : '#E5E5E5'
+            }]}>
+              <Pressable
+                style={[
+                  styles.addToCartButton,
+                  product.stock_quantity === 0 && styles.addToCartButtonDisabled,
+                  { backgroundColor: isUserDarkMode ? darkPalette.oxblood : palette.oxblood }
+                ]}
+                onPress={() => {
+                  if (product.stock_quantity === 0) {
+                    Alert.alert('Out of Stock', 'This product is currently unavailable');
+                    return;
+                  }
+                  
+                  // Ensure product has image field
+                  const productWithImage = {
+                    ...product,
+                    image: product.image || product.product_images?.[0]?.url || product.product_images?.[0]?.image_url || 'https://via.placeholder.com/600x600?text=No+Image'
+                  };
+                  
+                  // Update cart with current quantity
+                  onSetCartQuantity?.(productWithImage, product.hasWeights ? selectedWeight : 'unit', currentPrice, localQuantity);
+                  
+                  Alert.alert('Cart Updated', `${product.name} quantity updated to ${localQuantity}`, [{ text: 'OK' }]);
+                  
+                  onClose();
+                }}
+                disabled={product.stock_quantity === 0}
+              >
+                <FontAwesome name="shopping-cart" size={20} color="#FFF" />
+                <Text style={styles.addToCartText}>
+                  Update Cart ({localQuantity}) • GHC {totalPrice.toFixed(2)}
+                </Text>
+              </Pressable>
+            </View>
+          )}
         </View>
       </SafeAreaView>
     </Modal>

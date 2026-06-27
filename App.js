@@ -59,19 +59,19 @@ const getBadgeColor = (label) => {
 };
 
 const fallbackChips = [
-  'Sneakers',
-  'Boots',
-  'Sandals',
-  'Heels',
-  'Loafers',
-  'Athletic',
-  'Formal',
-  'Casual',
-  'Flip Flops',
-  'Slippers',
-  'Running',
-  'Oxford',
-  'Moccasins',
+  'Modern Kitchens',
+  'Kitchen Cabinets',
+  'Countertops',
+  'Kitchen Islands',
+  'Backsplashes',
+  'Interior Design',
+  'Living Room',
+  'Bedroom',
+  'Bathroom',
+  'Office',
+  'Lighting',
+  'Furniture',
+  'Decor',
 ];
 const weightOptions = ['US 7', 'US 8', 'US 9', 'US 10', 'US 11'];
 const weightMultipliers = {
@@ -84,54 +84,54 @@ const weightMultipliers = {
 
 const fallbackCategoryCards = [
   {
-    id: 'sneakers',
-    name: 'Nike Air Max 90',
-    price: 150,
+    id: 'modern-kitchen',
+    name: 'Modern Kitchen Design',
+    price: 2500,
     tag: 'Best Seller',
-    description: 'Classic sneaker with Max Air cushioning for all-day comfort.',
+    description: 'Contemporary kitchen with sleek cabinetry and modern appliances.',
     image:
-      'https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9ff?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=900&q=80',
   },
   {
-    id: 'boots',
-    name: 'Timberland Pro',
-    price: 180,
+    id: 'kitchen-cabinets',
+    name: 'Custom Kitchen Cabinets',
+    price: 1800,
     tag: 'Premium',
-    description: 'Industrial-grade work boots with steel toe protection.',
+    description: 'Handcrafted cabinets with premium finishes and soft-close hardware.',
     image:
-      'https://images.unsplash.com/photo-1551107696-a4b0c5c0d0c0?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1556909172-54557c7e4fb7?auto=format&fit=crop&w=900&q=80',
   },
   {
-    id: 'heels',
-    name: 'Jimmy Choo Pumps',
-    price: 350,
+    id: 'countertops',
+    name: 'Granite Countertops',
+    price: 1200,
     tag: 'Designer',
-    description: 'Elegant stiletto heels perfect for formal occasions.',
+    description: 'Luxurious granite countertops with elegant edge profiles.',
     image:
-      'https://images.unsplash.com/photo-1543163521-1bf539e0cf6d?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1556912173-3db996ea6c3d?auto=format&fit=crop&w=900&q=80',
   },
   {
-    id: 'loafers',
-    name: 'Gucci Horsebit',
-    price: 280,
+    id: 'kitchen-island',
+    name: 'Kitchen Island',
+    price: 950,
     tag: 'Luxury',
-    description: 'Classic leather loafers with signature horsebit detail.',
+    description: 'Spacious kitchen island with storage and seating options.',
     image:
-      'https://images.unsplash.com/photo-1533867617858-e611d85c33c9?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1556909172-e856b4ecf5e8?auto=format&fit=crop&w=900&q=80',
   },
   {
-    id: 'sandals',
-    name: 'Birkenstock Arizona',
-    price: 99,
-    tag: 'Comfort',
-    description: 'Iconic sandals with contoured cork footbed.',
+    id: 'interior-design',
+    name: 'Interior Design Service',
+    price: 500,
+    tag: 'Popular',
+    description: 'Professional interior design consultation and space planning.',
     image:
-      'https://images.unsplash.com/photo-1603487742131-41651ecf9d5f?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80',
   },
 ];
 
 const DEFAULT_CATEGORY_IMAGE =
-  'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80';
+  'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=900&q=80';
 
 const LOCAL_API_BASE = 'http://localhost:3001';
 
@@ -1752,6 +1752,43 @@ const fetchFooterData = async () => {
         })
         .filter(Boolean),
     );
+  };
+
+  const setCartQuantity = (product, selectedWeight, itemPrice, quantity) => {
+    const priceNum = Number(itemPrice);
+    const quantityNum = Number(quantity) || 1;
+    
+    setCartItems((currentItems) => {
+      const existingIndex = currentItems.findIndex(
+        (item) => item.id === product.id && item.selectedWeight === selectedWeight
+      );
+
+      if (existingIndex >= 0) {
+        // Update existing item
+        const updatedItems = [...currentItems];
+        updatedItems[existingIndex] = {
+          ...updatedItems[existingIndex],
+          quantity: quantityNum,
+          lineTotal: +(priceNum * quantityNum).toFixed(2),
+          unitPrice: priceNum,
+        };
+        return updatedItems;
+      } else {
+        // Add new item
+        return [
+          ...currentItems,
+          {
+            id: product.id,
+            name: product.name,
+            image: product.image,
+            selectedWeight,
+            quantity: quantityNum,
+            unitPrice: priceNum,
+            lineTotal: +(priceNum * quantityNum).toFixed(2),
+          },
+        ];
+      }
+    });
   };
 
   const openAdmin = () => {
@@ -4546,6 +4583,10 @@ const fetchFooterData = async () => {
         onAddToCart={(product, selectedWeight, itemPrice, quantity) => {
           addToCart(product, selectedWeight, itemPrice, quantity);
         }}
+        onSetCartQuantity={(product, selectedWeight, itemPrice, quantity) => {
+          setCartQuantity(product, selectedWeight, itemPrice, quantity);
+        }}
+        cartItems={cartItems}
         isUserDarkMode={isUserDarkMode}
       />
     </SafeAreaView>

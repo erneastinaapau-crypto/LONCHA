@@ -2,7 +2,7 @@
 
 ## Your Admin User Already Exists! ✅
 
-**Email**: `osebo-shoe.shoesadmin@gmail.com`  
+**Email**: `ssebo-sooe.shoes-hoe.shoesadmin@gmail.com`  
 **Status**: Already created in Supabase  
 **UID**: `97f28b94-13d6-4590-b8f9-93f5352ed729`
 
@@ -29,7 +29,7 @@
 1. Open your app
 2. Click "Sign In" 
 3. Enter:
-   - Email: `osebo-shoe.shoesadmin@gmail.com`
+   - Email: `lonchaadmin@gmail.com`
    - Password: (your password)
 4. Should redirect to **Admin Dashboard** ✅
 
@@ -39,14 +39,14 @@
 
 Run in Supabase SQL Editor:
 ```sql
-SELECT email, role FROM profiles WHERE email = 'osebo-shoe.shoesadmin@gmail.com';
+SELECT email, role FROM profiles WHERE email = 'lonchaadmin@gmail.com';
 ```
 
 Should show:
 ```
 email                           | role
 --------------------------------|------
-osebo-shoe.shoesadmin@gmail.com | admin
+lonchaadmin@gmail.com | admin
 ```
 
 ---

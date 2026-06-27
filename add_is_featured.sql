@@ -1,5 +1,5 @@
 -- =============================================================
--- Osebo-Shoes — Add is_featured to products table
+-- LONCHA — Add is_featured to products table
 -- Run in: Supabase Dashboard → SQL Editor → New Query
 -- =============================================================
 
