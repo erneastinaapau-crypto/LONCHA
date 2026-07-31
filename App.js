@@ -517,6 +517,7 @@ export default function App() {
   const [customerOrders, setCustomerOrders] = useState([]);
   const [customerOrdersLoading, setCustomerOrdersLoading] = useState(false);
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  const [heroCycleCount, setHeroCycleCount] = useState(0); // tracks completed full loops
 
   // Footer Accordion State
   const [expandedFooterSections, setExpandedFooterSections] = useState({
@@ -918,14 +919,25 @@ export default function App() {
 
   useEffect(() => {
     if (heroMedia.length <= 1) return;
-    // Read duration from Supabase per slide — defaults to 5 seconds if not set
+    // Read per-slide duration from Supabase (ms), default 5s
     const currentItem = heroMedia[currentHeroSlide];
     const slideDuration = Number(currentItem?.duration) || 5000;
+    // Read max_cycles from first slide as global setting (0 = infinite)
+    const maxCycles = Number(heroMedia[0]?.max_cycles) || 0;
+    // Stop advancing if max cycles reached
+    if (maxCycles > 0 && heroCycleCount >= maxCycles) return;
     const timer = setTimeout(() => {
-      setCurrentHeroSlide((prev) => (prev + 1) % heroMedia.length);
+      setCurrentHeroSlide((prev) => {
+        const next = (prev + 1) % heroMedia.length;
+        // Completing a full cycle when wrapping back to slide 0
+        if (next === 0) {
+          setHeroCycleCount((c) => c + 1);
+        }
+        return next;
+      });
     }, slideDuration);
     return () => clearTimeout(timer);
-  }, [heroMedia, currentHeroSlide]);
+  }, [heroMedia, currentHeroSlide, heroCycleCount]);
 
   const fetchCustomerOrders = async () => {
     if (!user) {
