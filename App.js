@@ -5600,7 +5600,7 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
   },
   checkoutBtnText: {
-    color: palette.oxblood,
+    color: '#fff',
     letterSpacing: 1.2,
     fontSize: 11,
     fontWeight: '700',
