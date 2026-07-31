@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ImageBackground, StyleSheet, Pressable, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, ScrollView, useWindowDimensions } from 'react-native';
 import { supabase } from '../lib/supabase';
 
 const FALLBACK_BANNERS = [
@@ -33,17 +33,17 @@ export default function PromoBannerStrip({ onBannerPress }) {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const { width } = useWindowDimensions();
-  
+
   // Detect phone vs desktop/tablet
   const isPhone = width < 768;
-  
+
   // Calculate card width to fill the row with equal spacing
   const numCards = 3; // Number of cards visible at once
   const horizontalPadding = 32; // 16px on each side
   const cardGap = 12; // Gap between cards
   const totalGaps = (numCards - 1) * cardGap;
   const cardWidth = (width - horizontalPadding - totalGaps) / numCards;
-  
+
   // Reduced height for phone
   const cardHeight = isPhone ? 110 : 150;
 
@@ -100,24 +100,27 @@ export default function PromoBannerStrip({ onBannerPress }) {
             accessibilityRole="button"
             accessibilityLabel={`${banner.promo_label}: ${banner.title}`}
           >
-            {/* Layer 1: Blurred background */}
+            {/* LAYER 1 (bottom): Blurred backdrop */}
             <ImageBackground
               source={{ uri: banner.image_url }}
-              style={StyleSheet.absoluteFillObject}
+              style={{ ...StyleSheet.absoluteFillObject, zIndex: 0 }}
               blurRadius={50}
               resizeMode="cover"
             >
-              <View style={styles.blurOverlay} />
+              <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.15)' }} />
             </ImageBackground>
 
-            {/* Layer 2: Sharp centered foreground image */}
+            {/* LAYER 2: Sharp centered foreground image */}
             <Image
               source={{ uri: banner.image_url }}
               style={styles.bannerImage}
               resizeMode="contain"
             />
 
-            {/* Promo Label Badge (Top-Left) */}
+            {/* LAYER 3: Dark overlay for text readability */}
+            <View style={styles.overlay} />
+
+            {/* LAYER 4 (top): Promo badge */}
             <View
               style={[
                 styles.promoBadge,
@@ -127,7 +130,7 @@ export default function PromoBannerStrip({ onBannerPress }) {
               <Text style={styles.promoBadgeText}>{banner.promo_label || 'PROMO'}</Text>
             </View>
 
-            {/* Text Content */}
+            {/* LAYER 4 (top): Text content */}
             <View style={styles.textContent}>
               <Text style={[styles.bannerTitle, isPhone && styles.bannerTitlePhone]} numberOfLines={2}>
                 {banner.title}
@@ -180,24 +183,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
   },
   bannerImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     width: '100%',
     height: '100%',
-    zIndex: 1,
-  },
-  blurOverlay: {
     position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.22)',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -215,7 +205,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
-    zIndex: 2,
   },
   promoBadgeText: {
     color: '#FFFFFF',
@@ -230,7 +219,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: 14,
-    zIndex: 2,
   },
   bannerTitle: {
     fontSize: 16,
