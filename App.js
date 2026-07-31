@@ -3195,7 +3195,7 @@ const fetchFooterData = async () => {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    objectFit: 'cover',
+                    objectFit: 'contain',
                     display: 'block',
                     opacity: 1,
                   }
@@ -3205,7 +3205,7 @@ const fetchFooterData = async () => {
                   source={{ uri: heroMedia[currentHeroSlide]?.uri }}
                   style={styles.heroImage}
                   useNativeControls={false}
-                  resizeMode={ResizeMode.COVER}
+                  resizeMode={ResizeMode.CONTAIN}
                   isLooping
                   shouldPlay
                   isMuted
@@ -3215,6 +3215,7 @@ const fetchFooterData = async () => {
               <Image
                 source={{ uri: heroMedia[currentHeroSlide]?.uri }}
                 style={styles.heroImage}
+                resizeMode="contain"
               />
             )
           ) : null}
@@ -4737,11 +4738,13 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   hero: {
-    height: 320,
     margin: 16,
     backgroundColor: '#000',
     overflow: 'hidden',
     justifyContent: 'flex-end',
+    aspectRatio: 16 / 9,
+    width: '100%',
+    alignSelf: 'center',
   },
   heroImage: {
     ...StyleSheet.absoluteFillObject,
@@ -4751,7 +4754,7 @@ const styles = StyleSheet.create({
   },
   heroOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   heroTextWrap: {
     padding: 20,
