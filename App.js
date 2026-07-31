@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   Animated,
   Image,
-  ImageBackground,
   Modal,
   Pressable,
   SafeAreaView,
@@ -53,12 +52,12 @@ const darkPalette = {
 const getBadgeColor = (label) => {
   if (!label) return '#4A0404';
   const t = label.toUpperCase();
-  if (/NEW|ARRIVAL|FRESH/.test(t))          return '#10B981'; // green
-  if (/SALE|OFF|DISCOUNT|PROMO/.test(t))    return '#EF4444'; // red
-  if (/HOT|TRENDING|POPULAR|DEAL/.test(t))  return '#F59E0B'; // amber
-  if (/BEST|SELLER|TOP|PICK/.test(t))       return '#3B82F6'; // blue
-  if (/LUXURY|PREMIUM|DESIGNER/.test(t))    return '#8B5CF6'; // purple
-  if (/CLASSIC|ESSENTIAL/.test(t))          return '#6B7280'; // gray
+  if (/NEW|ARRIVAL|FRESH/.test(t)) return '#10B981'; // green
+  if (/SALE|OFF|DISCOUNT|PROMO/.test(t)) return '#EF4444'; // red
+  if (/HOT|TRENDING|POPULAR|DEAL/.test(t)) return '#F59E0B'; // amber
+  if (/BEST|SELLER|TOP|PICK/.test(t)) return '#3B82F6'; // blue
+  if (/LUXURY|PREMIUM|DESIGNER/.test(t)) return '#8B5CF6'; // purple
+  if (/CLASSIC|ESSENTIAL/.test(t)) return '#6B7280'; // gray
   return '#4A0404';
 };
 
@@ -146,16 +145,16 @@ const mapCategoryRowToCard = (row) => ({
 
 const mapProductRowToCard = (row, catNameToImageMap = {}, catIdToNameMap = {}) => {
   let catName = row.category_id ?? row.category ?? row.category_name ?? row.metadata?.category_name ?? row.metadata?.category ?? row.tag ?? null;
-  
+
   // If the category is actually a UUID from the categories table, resolve it to the human-readable name!
   if (catName && catIdToNameMap[catName]) {
     catName = catIdToNameMap[catName];
   }
-  
+
   // Handle products with or without weights
   const hasWeights = row.has_weights ?? false;
   const basePrice = Number(row.price ?? 0);
-  
+
   return {
     id: row.id,
     name: row.name ?? row.title ?? 'Untitled product',
@@ -189,7 +188,7 @@ function CategoryCard({ category, cardWidth, currency, onAddToCart, onRemoveFrom
     }
     if (typeof window !== 'undefined' && window.Image) {
       const img = new window.Image();
-      img.onload  = () => setImgSrc(url);
+      img.onload = () => setImgSrc(url);
       img.onerror = () => setImgSrc(DEFAULT_CATEGORY_IMAGE);
       img.src = url;
     } else {
@@ -227,18 +226,18 @@ function CategoryCard({ category, cardWidth, currency, onAddToCart, onRemoveFrom
   };
 
   // Compact sizes for real phone 2-column layout (~167px cards)
-  const cardPad   = isPhone ? 8  : 14;
-  const nameFz    = isPhone ? 14 : 24;
+  const cardPad = isPhone ? 8 : 14;
+  const nameFz = isPhone ? 14 : 24;
   const nameLineH = isPhone ? 18 : 28;
-  const priceFz   = isPhone ? 12 : 20;
-  const weightPad = isPhone ? 6  : 10;
-  const weightFz  = isPhone ? 10 : 12;
-  const btnPad    = isPhone ? 8  : 13;
-  const btnFz     = isPhone ? 9  : 12;
-  const btnLs     = isPhone ? 0.6 : 1.8;
+  const priceFz = isPhone ? 12 : 20;
+  const weightPad = isPhone ? 6 : 10;
+  const weightFz = isPhone ? 10 : 12;
+  const btnPad = isPhone ? 8 : 13;
+  const btnFz = isPhone ? 9 : 12;
+  const btnLs = isPhone ? 0.6 : 1.8;
 
   return (
-    <View style={[styles.productCard, { 
+    <View style={[styles.productCard, {
       width: cardWidth,
       backgroundColor: isUserDarkMode ? darkPalette.surface : palette.surface
     }]}>
@@ -275,16 +274,16 @@ function CategoryCard({ category, cardWidth, currency, onAddToCart, onRemoveFrom
               ) : null}
 
               {/* Square Cart Icon at bottom-right of image */}
-              <Pressable 
+              <Pressable
                 onPress={handleToggleCart}
                 style={[
                   styles.cartIconSquare,
                   isSelected && styles.cartIconSquareSelected
                 ]}
               >
-                <FontAwesome 
-                  name="shopping-cart" 
-                  size={isPhone ? 20 : 26} 
+                <FontAwesome
+                  name="shopping-cart"
+                  size={isPhone ? 20 : 26}
                   color={isSelected ? '#FFF' : (isUserDarkMode ? darkPalette.oxblood : palette.oxblood)}
                 />
               </Pressable>
@@ -292,19 +291,19 @@ function CategoryCard({ category, cardWidth, currency, onAddToCart, onRemoveFrom
           </View>
 
           <View style={[styles.rowBetween, { gap: 4 }]}>
-            <Text style={[styles.productName, { 
-              fontSize: nameFz, 
+            <Text style={[styles.productName, {
+              fontSize: nameFz,
               lineHeight: nameLineH,
               color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal
             }]} numberOfLines={isPhone ? 2 : undefined}>
               {category.name}
             </Text>
-          <Text style={[styles.productPrice, { 
-            fontSize: priceFz,
-            color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood
-          }]}>{formatMoney(itemPrice, currency)}</Text>
-        </View>
-          <Text style={[styles.priceUnit, { 
+            <Text style={[styles.productPrice, {
+              fontSize: priceFz,
+              color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood
+            }]}>{formatMoney(itemPrice, currency)}</Text>
+          </View>
+          <Text style={[styles.priceUnit, {
             color: isUserDarkMode ? darkPalette.secondary : palette.secondary
           }]}>{category.hasWeights ? 'Price per unit' : 'Price per unit'}</Text>
           {/* Hide description on phone to save vertical space */}
@@ -326,8 +325,8 @@ function CategoryCard({ category, cardWidth, currency, onAddToCart, onRemoveFrom
                     key={option}
                     onPress={() => setSelectedWeight(option)}
                     style={[
-                      styles.weightOption, 
-                      active && styles.weightOptionActive, 
+                      styles.weightOption,
+                      active && styles.weightOptionActive,
                       { paddingVertical: weightPad },
                       !active && isUserDarkMode && {
                         borderColor: '#444',
@@ -336,8 +335,8 @@ function CategoryCard({ category, cardWidth, currency, onAddToCart, onRemoveFrom
                     ]}
                   >
                     <Text style={[
-                      styles.weightOptionText, 
-                      active && styles.weightOptionTextActive, 
+                      styles.weightOptionText,
+                      active && styles.weightOptionTextActive,
                       { fontSize: weightFz },
                       !active && isUserDarkMode && { color: darkPalette.secondary }
                     ]}>
@@ -451,7 +450,7 @@ export default function App() {
       setCartModalVisible(false);
     });
   };
-  
+
   // User Auth State
   const [user, setUser] = useState(null);
   const [authModalVisible, setAuthModalVisible] = useState(false);
@@ -462,15 +461,15 @@ export default function App() {
   const [authEmail, setAuthEmail] = useState('');
   const [authInterests, setAuthInterests] = useState([]);
   const [authLoading, setAuthLoading] = useState(false);
-  
+
   // Current Page Route
   const [currentPage, setCurrentPage] = useState('shop');
   const [currency, setCurrency] = useState('GHC');
   const [adminEmail, setAdminEmail] = useState('');
   const [ratesUpdated, setRatesUpdated] = useState(0);
-// const isCartPage = currentPage === 'cart'; // moved to later block
-// const isShopPage = currentPage === 'shop'; // moved
-// const isAdminPage = currentPage === 'adminLogin'; // removed duplicate
+  // const isCartPage = currentPage === 'cart'; // moved to later block
+  // const isShopPage = currentPage === 'shop'; // moved
+  // const isAdminPage = currentPage === 'adminLogin'; // removed duplicate
 
   useEffect(() => {
     const fetchLiveRates = async () => {
@@ -497,7 +496,7 @@ export default function App() {
   const [categoriesError, setCategoriesError] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productDetailVisible, setProductDetailVisible] = useState(false);
-  
+
   // Checkout & Order states
   const [checkoutModalVisible, setCheckoutModalVisible] = useState(false);
   const [customerName, setCustomerName] = useState('');
@@ -508,12 +507,12 @@ export default function App() {
   const [orderSuccessModalVisible, setOrderSuccessModalVisible] = useState(false);
   const [lastCreatedOrderId, setLastCreatedOrderId] = useState('');
   const [localOrders, setLocalOrders] = useState([]);
-  
+
   // Admin Profile State
   const [adminAvatarUrl, setAdminAvatarUrl] = useState('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=150&q=80');
   const [adminProfileModalVisible, setAdminProfileModalVisible] = useState(false);
   const [tempAvatarUrl, setTempAvatarUrl] = useState('');
-  
+
   // Customer Account State
   const [customerOrders, setCustomerOrders] = useState([]);
   const [customerOrdersLoading, setCustomerOrdersLoading] = useState(false);
@@ -596,15 +595,15 @@ export default function App() {
     setActiveAdminTab(tab);
     closeAdminDrawer();
   };
-  
+
   // Admin catalog states
   const [addProductModalVisible, setAddProductModalVisible] = useState(false);
   const [editProductModalVisible, setEditProductModalVisible] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  
+
   // Category Maps
   const [catNameToIdMap, setCatNameToIdMap] = useState({});
-  
+
   const [newProduct, setNewProduct] = useState({
     name: '',
     price_250g: '',
@@ -640,7 +639,7 @@ export default function App() {
     ]).start();
   }, [lift, reveal]);
 
-const fetchFooterData = async () => {
+  const fetchFooterData = async () => {
     try {
       const { data, error } = await supabase
         .from('footer_sections')
@@ -696,16 +695,16 @@ const fetchFooterData = async () => {
     // 1. Try querying Supabase directly
     try {
       console.log('📡 Attempting direct Supabase query...');
-      
+
       // Fetch products and product_images separately to avoid column alias issues
       let prodRes = await supabase.from('products').select('*');
-      
-      console.log('🔍 Raw prodRes:', { 
-        hasError: !!prodRes.error, 
+
+      console.log('🔍 Raw prodRes:', {
+        hasError: !!prodRes.error,
         dataLength: prodRes.data?.length,
-        errorMessage: prodRes.error?.message 
+        errorMessage: prodRes.error?.message
       });
-      
+
       // If products loaded successfully, try to fetch their images
       if (prodRes.data && prodRes.data.length > 0) {
         const productIds = prodRes.data.map(p => p.id);
@@ -714,7 +713,7 @@ const fetchFooterData = async () => {
           .select('*')
           .in('product_id', productIds)
           .order('position', { ascending: true });
-        
+
         if (imagesRes.data && !imagesRes.error) {
           console.log(`📸 Loaded ${imagesRes.data.length} product images`);
           // Attach images to products
@@ -726,16 +725,16 @@ const fetchFooterData = async () => {
           console.log('⚠️ Could not load product images:', imagesRes.error?.message);
         }
       }
-      
+
       const catRes = await supabase.from('categories').select('*');
-      
+
       if (prodRes.error) {
         console.error('❌ Products query error:', prodRes.error);
         throw prodRes.error;
       }
-      
+
       console.log('✅ Products fetched from Supabase:', prodRes.data?.length || 0, 'products');
-      
+
       if (catRes.data) {
         catRes.data.forEach(c => {
           if (c.id && c.name) {
@@ -753,7 +752,7 @@ const fetchFooterData = async () => {
         // Sort product_images by position for each product
         productData = prodRes.data.map(product => ({
           ...product,
-          product_images: product.product_images 
+          product_images: product.product_images
             ? product.product_images.sort((a, b) => (a.position || 0) - (b.position || 0))
             : []
         }));
@@ -767,7 +766,7 @@ const fetchFooterData = async () => {
       console.error('❌ Direct Supabase fetch failed:', err.message);
       fetchError = err.message;
       setCategoriesError('Supabase Error: ' + err.message);
-      
+
       if (err.message?.includes('JWT') || err.message?.includes('expired')) {
         supabase.auth.signOut();
       }
@@ -805,7 +804,7 @@ const fetchFooterData = async () => {
 
       setProductCards(nextCards);
       console.log('✅ Displaying', nextCards.length, 'products from Supabase');
-      
+
       // Extract chips from already-mapped cards using categoryLabel (safe, already normalised)
       const isValidCategory = (val) => {
         if (!val || typeof val !== 'string') return false;
@@ -827,13 +826,13 @@ const fetchFooterData = async () => {
 
       const dynamicChips = ['All', ...Array.from(categoriesFromCards).sort()];
       setCategoryChips(dynamicChips.length > 1 ? dynamicChips : ['All', ...fallbackChips]);
-      
+
       // Clear error since we successfully loaded from Supabase
       setCategoriesError('');
     } else {
       // 3. Fall back to local data when Supabase fetch failed or returned empty
       console.log('🔄 Showing fallback demo products...');
-      const errorMsg = fetchError 
+      const errorMsg = fetchError
         ? `⚠️ Backend Error: ${fetchError}`
         : '✅ Backend connected. Database is empty - showing demo products.';
       setCategoriesError(errorMsg);
@@ -852,7 +851,7 @@ const fetchFooterData = async () => {
 
   useEffect(() => {
     loadSupabaseData();
-    
+
     // Auth Listener
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -931,10 +930,10 @@ const fetchFooterData = async () => {
       console.log('❌ Cannot fetch orders: User not logged in');
       return;
     }
-    
+
     console.log('🔄 Fetching customer orders for user:', user.id);
     setCustomerOrdersLoading(true);
-    
+
     try {
       // Fetch orders with order_items and product details
       const { data, error } = await supabase
@@ -953,14 +952,14 @@ const fetchFooterData = async () => {
         `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      
+
       if (error) {
         console.error('❌ Error fetching orders:', error);
         throw error;
       }
-      
+
       console.log('✅ Orders fetched from Supabase:', data?.length || 0, 'orders');
-      
+
       // Map product data to order items for easy access
       const ordersWithProducts = (data || []).map(order => {
         console.log('📦 Order:', order.id, 'Items:', order.order_items?.length || 0);
@@ -977,7 +976,7 @@ const fetchFooterData = async () => {
           })
         };
       });
-      
+
       setCustomerOrders(ordersWithProducts);
       console.log('✅ Customer orders state updated');
     } catch (err) {
@@ -990,7 +989,7 @@ const fetchFooterData = async () => {
           .select('*, order_items(*)')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
-        
+
         if (!error) {
           console.log('✅ Fallback query successful:', data?.length || 0, 'orders');
           setCustomerOrders(data || []);
@@ -1015,7 +1014,7 @@ const fetchFooterData = async () => {
     console.log('🛒 Submitting order...');
     console.log('  User ID:', user?.id || 'Guest');
     console.log('  Cart Items:', cartItems.length);
-    
+
     setIsSubmittingOrder(true);
     const mockOrderId = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
     const totalAmount = cartItems.reduce((total, item) => total + item.lineTotal, 0);
@@ -1077,7 +1076,7 @@ const fetchFooterData = async () => {
       setOrderSuccessModalVisible(true);
       setCartItems([]);
       clearCheckoutForm();
-      
+
       // Refresh order history if user is logged in
       if (user) {
         console.log('🔄 Refreshing order history...');
@@ -1087,7 +1086,7 @@ const fetchFooterData = async () => {
       }
     } catch (err) {
       console.warn('⚠️ Supabase checkout failed, falling back to local simulation:', err.message);
-      
+
       // Local Order Simulation
       const simulatedOrder = {
         id: mockOrderId,
@@ -1115,7 +1114,7 @@ const fetchFooterData = async () => {
       setOrderSuccessModalVisible(true);
       setCartItems([]);
       clearCheckoutForm();
-      
+
       // Add to customer orders for display
       if (user) {
         setCustomerOrders((prev) => [simulatedOrder, ...prev]);
@@ -1140,12 +1139,12 @@ const fetchFooterData = async () => {
         .select('role')
         .eq('id', user.id)
         .single();
-      
+
       if (error) {
         console.log('Error fetching profile:', error);
         return false;
       }
-      
+
       return profile?.role === 'admin';
     } catch (err) {
       console.log('Error checking admin status:', err);
@@ -1173,7 +1172,7 @@ const fetchFooterData = async () => {
 
         // Check admin using profiles table
         const isAdmin = await checkAdmin(user);
-        
+
         if (isAdmin) {
           setAdminUnlocked(true);
           setCurrentPage('admin');
@@ -1210,7 +1209,7 @@ const fetchFooterData = async () => {
 
   const INTERESTS = [];
   const toggleInterest = (interest) => {
-    setAuthInterests(prev => 
+    setAuthInterests(prev =>
       prev.includes(interest) ? prev.filter(i => i !== interest) : [...prev, interest]
     );
   };
@@ -1226,7 +1225,7 @@ const fetchFooterData = async () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      
+
       // Merge live database orders with locally simulated orders
       const mergedOrders = [...localOrders, ...(data || [])];
       setAdminOrders(mergedOrders);
@@ -1260,7 +1259,7 @@ const fetchFooterData = async () => {
         .select();
 
       if (error) throw error;
-      
+
       // If no rows were returned, RLS might have silently blocked it.
       if (!data || data.length === 0) {
         console.warn('Update succeeded but no rows were modified. Check Supabase RLS.');
@@ -1474,7 +1473,7 @@ const fetchFooterData = async () => {
       loadSupabaseData();
     } catch (err) {
       console.warn('Failed to insert product in Supabase. Simulating locally:', err.message);
-      
+
       const newLocalCard = {
         id: `prod-${Math.random().toString(36).substr(2, 9)}`,
         name: productRow.name,
@@ -1548,10 +1547,10 @@ const fetchFooterData = async () => {
     // Check if it's simulated local product
     if (editingProduct.id.toString().startsWith('prod-') || editingProduct.id.toString().includes('prod-')) {
       setProductCards((prev) =>
-        prev.map((p) => (p.id === editingProduct.id ? { 
-          ...editingProduct, 
-          price_250g: p250, 
-          price_500g: p500, 
+        prev.map((p) => (p.id === editingProduct.id ? {
+          ...editingProduct,
+          price_250g: p250,
+          price_500g: p500,
           price_1kg: p1kg,
           price: pUnit,
           hasWeights: editingProduct.hasWeights
@@ -1586,12 +1585,12 @@ const fetchFooterData = async () => {
       name: editingProduct.name.trim(),
       price_250g: p250 ?? editingProduct.price_250g,
       price_500g: p500 ?? editingProduct.price_500g,
-      price_1kg:  p1kg  ?? editingProduct.price_1kg,
-      price:      pUnit ?? editingProduct.price,
+      price_1kg: p1kg ?? editingProduct.price_1kg,
+      price: pUnit ?? editingProduct.price,
       hasWeights: editingProduct.hasWeights,
-      tag:        editingProduct.tag?.trim() || null,
+      tag: editingProduct.tag?.trim() || null,
       description: editingProduct.description?.trim() || '',
-      image:      editingProduct.image?.trim() || editingProduct.image,
+      image: editingProduct.image?.trim() || editingProduct.image,
       stock_quantity: parseInt(editingProduct.stock_quantity) || 0,
     };
     setProductCards((prev) =>
@@ -1717,7 +1716,7 @@ const fetchFooterData = async () => {
   const addToCart = (category, selectedWeight, itemPrice, qty = 1) => {
     const priceNum = Number(itemPrice);
     const quantityToAdd = Number(qty) || 1;
-    
+
     setCartItems((currentItems) => {
       const existingItemIndex = currentItems.findIndex(
         (item) => item.id === category.id && item.selectedWeight === selectedWeight
@@ -1784,7 +1783,7 @@ const fetchFooterData = async () => {
   const setCartQuantity = (product, selectedWeight, itemPrice, quantity) => {
     const priceNum = Number(itemPrice);
     const quantityNum = Number(quantity) || 1;
-    
+
     setCartItems((currentItems) => {
       const existingIndex = currentItems.findIndex(
         (item) => item.id === product.id && item.selectedWeight === selectedWeight
@@ -1835,7 +1834,7 @@ const fetchFooterData = async () => {
       if (!error && data?.user) {
         // Check admin using profiles table
         const isAdmin = await checkAdmin(data.user);
-        
+
         if (isAdmin) {
           setAdminUnlocked(true);
           setCurrentPage('admin');
@@ -1862,7 +1861,7 @@ const fetchFooterData = async () => {
 
       if (data?.user) {
         const isAdmin = await checkAdmin(data.user);
-        
+
         if (isAdmin) {
           setAdminUnlocked(true);
           setCurrentPage('admin');
@@ -1940,7 +1939,7 @@ const fetchFooterData = async () => {
     <SafeAreaView style={[styles.safeArea, { backgroundColor: isUserDarkMode ? darkPalette.background : palette.background }]}>
       <StatusBar style={isUserDarkMode ? "light" : "dark"} />
 
-      <View style={[styles.header, isPhoneScreen && { paddingHorizontal: 12 }, { 
+      <View style={[styles.header, isPhoneScreen && { paddingHorizontal: 12 }, {
         backgroundColor: isUserDarkMode ? darkPalette.surface : palette.background,
         borderBottomColor: isUserDarkMode ? '#333' : 'rgba(27, 28, 28, 0.1)'
       }]}>
@@ -1969,44 +1968,44 @@ const fetchFooterData = async () => {
       </View>
 
       {isAccountPage ? (
-        <ScrollView style={styles.cartPageLayout} contentContainerStyle={{padding: 20}}>
-          <View style={{marginBottom: 20}}>
-            <Text style={{fontFamily: 'Georgia', fontSize: 24, fontWeight: '700', color: palette.oxblood}}>My Account</Text>
-            <Text style={{color: palette.secondary, marginTop: 4}}>Welcome back, {user?.user_metadata?.full_name || 'Guest'}!</Text>
+        <ScrollView style={styles.cartPageLayout} contentContainerStyle={{ padding: 20 }}>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ fontFamily: 'Georgia', fontSize: 24, fontWeight: '700', color: palette.oxblood }}>My Account</Text>
+            <Text style={{ color: palette.secondary, marginTop: 4 }}>Welcome back, {user?.user_metadata?.full_name || 'Guest'}!</Text>
           </View>
-          
-          <View style={{backgroundColor: palette.background, borderWidth: 1, borderColor: palette.oxblood, padding: 20, marginBottom: 20}}>
-            <Text style={{fontFamily: 'Georgia', fontSize: 18, fontWeight: '700', color: palette.oxblood, marginBottom: 16}}>Order History</Text>
+
+          <View style={{ backgroundColor: palette.background, borderWidth: 1, borderColor: palette.oxblood, padding: 20, marginBottom: 20 }}>
+            <Text style={{ fontFamily: 'Georgia', fontSize: 18, fontWeight: '700', color: palette.oxblood, marginBottom: 16 }}>Order History</Text>
             {customerOrdersLoading ? (
-              <Text style={{color: palette.secondary}}>Loading orders...</Text>
+              <Text style={{ color: palette.secondary }}>Loading orders...</Text>
             ) : customerOrders.length > 0 ? (
               customerOrders.map(order => (
-                <View key={order.id} style={{flexDirection: 'column', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.05)'}}>
-                  <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8}}>
-                    <View style={{flex: 1}}>
-                      <Text style={{fontWeight: '700', color: palette.charcoal, fontSize: 11}} numberOfLines={1} ellipsizeMode="tail">
+                <View key={order.id} style={{ flexDirection: 'column', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.05)' }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ fontWeight: '700', color: palette.charcoal, fontSize: 11 }} numberOfLines={1} ellipsizeMode="tail">
                         Order #{String(order.id).slice(0, 8).toUpperCase()}...
                       </Text>
-                      <Text style={{fontSize: 11, color: palette.secondary, marginTop: 2}}>{new Date(order.created_at).toLocaleDateString()} at {new Date(order.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Text>
+                      <Text style={{ fontSize: 11, color: palette.secondary, marginTop: 2 }}>{new Date(order.created_at).toLocaleDateString()} at {new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
                     </View>
-                    <View style={{alignItems: 'flex-end', flexShrink: 0}}>
-                      <Text style={{fontWeight: '700', color: palette.oxblood}}>{formatCurrency(order.total)}</Text>
-                      <View style={{backgroundColor: order.status === 'Pending' ? '#FDE68A' : order.status === 'Processing' ? '#93C5FD' : order.status === 'Delivered' ? '#86EFAC' : '#E5E7EB', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, marginTop: 4}}>
-                        <Text style={{fontSize: 10, fontWeight: '700', color: '#1F2937'}}>{String(order.status).toUpperCase()}</Text>
+                    <View style={{ alignItems: 'flex-end', flexShrink: 0 }}>
+                      <Text style={{ fontWeight: '700', color: palette.oxblood }}>{formatCurrency(order.total)}</Text>
+                      <View style={{ backgroundColor: order.status === 'Pending' ? '#FDE68A' : order.status === 'Processing' ? '#93C5FD' : order.status === 'Delivered' ? '#86EFAC' : '#E5E7EB', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, marginTop: 4 }}>
+                        <Text style={{ fontSize: 10, fontWeight: '700', color: '#1F2937' }}>{String(order.status).toUpperCase()}</Text>
                       </View>
                     </View>
                   </View>
-                  
+
                   {order.order_items && order.order_items.length > 0 && (
-                    <View style={{marginTop: 12}}>
-                      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap: 12}}>
+                    <View style={{ marginTop: 12 }}>
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12 }}>
                         {order.order_items.map((item, idx) => {
                           const product = productCards.find(p => p.id === item.product_id);
                           const imageUrl = product ? product.image : 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=200&q=80';
                           return (
-                            <View key={idx} style={{alignItems: 'center', width: 44}}>
-                              <Image source={{uri: imageUrl}} style={{width: 44, height: 44, borderRadius: 22, backgroundColor: '#f5f5f5', borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)'}} />
-                              <Text style={{fontSize: 10, color: palette.secondary, marginTop: 4, fontWeight: '700'}}>{item.quantity}x</Text>
+                            <View key={idx} style={{ alignItems: 'center', width: 44 }}>
+                              <Image source={{ uri: imageUrl }} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#f5f5f5', borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)' }} />
+                              <Text style={{ fontSize: 10, color: palette.secondary, marginTop: 4, fontWeight: '700' }}>{item.quantity}x</Text>
                             </View>
                           );
                         })}
@@ -2016,33 +2015,33 @@ const fetchFooterData = async () => {
                 </View>
               ))
             ) : (
-              <Text style={{color: palette.secondary}}>You haven't placed any orders yet.</Text>
+              <Text style={{ color: palette.secondary }}>You haven't placed any orders yet.</Text>
             )}
           </View>
-          
-            <Pressable
-              style={{backgroundColor: palette.oxblood, padding: 14, alignItems: 'center', marginBottom: 12}}
-              onPress={() => setCurrentPage('shop')}
-              accessibilityLabel="Back to Shop"
-            >
-              <Text style={{color: '#fff', fontWeight: '700', letterSpacing: 1}}>
-                BACK TO SHOP
-              </Text>
-            </Pressable>
 
-            <Pressable
-              style={{borderWidth: 1, borderColor: palette.oxblood, padding: 14, alignItems: 'center'}}
-              onPress={handleLogout}
-              accessibilityLabel="Sign Out"
-            >
-              <Text style={{color: palette.oxblood, fontWeight: '700', letterSpacing: 1}}>
-                SIGN OUT
-              </Text>
-            </Pressable>
+          <Pressable
+            style={{ backgroundColor: palette.oxblood, padding: 14, alignItems: 'center', marginBottom: 12 }}
+            onPress={() => setCurrentPage('shop')}
+            accessibilityLabel="Back to Shop"
+          >
+            <Text style={{ color: '#fff', fontWeight: '700', letterSpacing: 1 }}>
+              BACK TO SHOP
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={{ borderWidth: 1, borderColor: palette.oxblood, padding: 14, alignItems: 'center' }}
+            onPress={handleLogout}
+            accessibilityLabel="Sign Out"
+          >
+            <Text style={{ color: palette.oxblood, fontWeight: '700', letterSpacing: 1 }}>
+              SIGN OUT
+            </Text>
+          </Pressable>
         </ScrollView>
       ) : isAdminLoginPage ? (
         <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: palette.background, justifyContent: 'center', alignItems: 'center', padding: 24, minHeight: 500 }} showsVerticalScrollIndicator={false}>
-          <View style={{ width: '100%', maxWidth: 420, backgroundColor: '#fff', borderTopWidth: 4, borderTopColor: palette.oxblood, padding: 36, shadowColor: '#000', shadowOffset: {width: 0, height: 8}, shadowOpacity: 0.08, shadowRadius: 24 }}>
+          <View style={{ width: '100%', maxWidth: 420, backgroundColor: '#fff', borderTopWidth: 4, borderTopColor: palette.oxblood, padding: 36, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.08, shadowRadius: 24 }}>
 
             {/* Logo / Brand */}
             <Text style={{ fontSize: 11, fontWeight: '700', letterSpacing: 3, color: palette.oxblood, marginBottom: 8 }}>Osebo-Shoes</Text>
@@ -2096,11 +2095,11 @@ const fetchFooterData = async () => {
           {/* SIDEBAR — hidden on mobile, shown on desktop */}
           <View style={[styles.adminSidebar, isCompactAdmin && { display: 'none' }]}>
             <Text style={styles.adminSidebarBrand}>Osebo-Shoes</Text>
-            
+
             <View style={styles.adminProfileBlock}>
               <Pressable onPress={() => { setTempAvatarUrl(adminAvatarUrl); setAdminProfileModalVisible(true); }}>
                 <Image source={{ uri: adminAvatarUrl }} style={styles.adminAvatar} />
-                <View style={{position: 'absolute', bottom: -2, right: -2, backgroundColor: '#4A0404', borderRadius: 12, width: 20, height: 20, alignItems: 'center', justifyContent: 'center'}}>
+                <View style={{ position: 'absolute', bottom: -2, right: -2, backgroundColor: '#4A0404', borderRadius: 12, width: 20, height: 20, alignItems: 'center', justifyContent: 'center' }}>
                   <FontAwesome name="pencil" size={10} color="#fff" />
                 </View>
               </Pressable>
@@ -2149,7 +2148,7 @@ const fetchFooterData = async () => {
           {/* MAIN CONTENT */}
           <ScrollView style={[styles.adminMainContent, { backgroundColor: adm.bg }]} contentContainerStyle={styles.adminMainScroll} showsVerticalScrollIndicator={true}>
             <View style={[styles.adminTopHeader, { borderBottomColor: adm.border }]}>
-              <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                 {/* Hamburger — mobile only */}
                 {isCompactAdmin && (
                   <Pressable
@@ -2179,601 +2178,605 @@ const fetchFooterData = async () => {
 
             {/* CURRENCY TOGGLE */}
             {(activeAdminTab === 'Dashboard' || activeAdminTab === 'Analytics') && (
-            <View style={styles.adminCurrencySection}>
-              <Text style={styles.adminSectionSubTitle}>CURRENCY</Text>
-              <View style={styles.adminCurrencyToggleRow}>
-                {currencyOptions.map((option) => {
-                  const active = option === currency;
-                  return (
-                    <Pressable
-                      key={option}
-                      onPress={() => setCurrency(option)}
-                      style={[styles.adminCurrencyToggle, active && styles.adminCurrencyToggleActive, isCompactAdmin && { paddingHorizontal: 12, paddingVertical: 6 }]}
-                    >
-                      <Text style={[styles.adminCurrencyToggleText, active && styles.adminCurrencyToggleTextActive]}>{option}</Text>
-                    </Pressable>
-                  );
-                })}
+              <View style={styles.adminCurrencySection}>
+                <Text style={styles.adminSectionSubTitle}>CURRENCY</Text>
+                <View style={styles.adminCurrencyToggleRow}>
+                  {currencyOptions.map((option) => {
+                    const active = option === currency;
+                    return (
+                      <Pressable
+                        key={option}
+                        onPress={() => setCurrency(option)}
+                        style={[styles.adminCurrencyToggle, active && styles.adminCurrencyToggleActive, isCompactAdmin && { paddingHorizontal: 12, paddingVertical: 6 }]}
+                      >
+                        <Text style={[styles.adminCurrencyToggleText, active && styles.adminCurrencyToggleTextActive]}>{option}</Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
               </View>
-            </View>
             )}
 
             {/* STATS */}
             {(activeAdminTab === 'Dashboard' || activeAdminTab === 'Analytics') && (
-            <View style={styles.adminStatCardsRow}>
-              <View style={[styles.adminNewStatCard, { backgroundColor: adm.surface, borderColor: adm.border }]}>
-                <View style={styles.adminNewStatCardHeader}>
-                  <Text style={styles.adminNewStatLabel}>REVENUE</Text>
-                  <View style={analyticsData.revStyle.bg}><Text style={analyticsData.revStyle.text}>{analyticsData.revGrowthStr}</Text></View>
+              <View style={styles.adminStatCardsRow}>
+                <View style={[styles.adminNewStatCard, { backgroundColor: adm.surface, borderColor: adm.border }]}>
+                  <View style={styles.adminNewStatCardHeader}>
+                    <Text style={styles.adminNewStatLabel}>REVENUE</Text>
+                    <View style={analyticsData.revStyle.bg}><Text style={analyticsData.revStyle.text}>{analyticsData.revGrowthStr}</Text></View>
+                  </View>
+                  <Text style={styles.adminNewStatValue}>{formatCurrency(adminOrders.reduce((acc, o) => acc + (Number(o.total_amount) || 0), 0))}</Text>
+                  <View style={styles.adminStatLine} />
                 </View>
-                <Text style={styles.adminNewStatValue}>{formatCurrency(adminOrders.reduce((acc, o) => acc + (Number(o.total_amount) || 0), 0))}</Text>
-                <View style={styles.adminStatLine} />
-              </View>
-              
-              <View style={[styles.adminNewStatCard, { backgroundColor: adm.surface, borderColor: adm.border }]}>
-                <View style={styles.adminNewStatCardHeader}>
-                  <Text style={styles.adminNewStatLabel}>TOTAL ORDERS</Text>
-                  <View style={analyticsData.orderStyle.bg}><Text style={analyticsData.orderStyle.text}>{analyticsData.orderGrowthStr}</Text></View>
+
+                <View style={[styles.adminNewStatCard, { backgroundColor: adm.surface, borderColor: adm.border }]}>
+                  <View style={styles.adminNewStatCardHeader}>
+                    <Text style={styles.adminNewStatLabel}>TOTAL ORDERS</Text>
+                    <View style={analyticsData.orderStyle.bg}><Text style={analyticsData.orderStyle.text}>{analyticsData.orderGrowthStr}</Text></View>
+                  </View>
+                  <Text style={styles.adminNewStatValue}>{adminOrders.length}</Text>
+                  <Text style={styles.adminNewStatSub}>Lifetime orders</Text>
                 </View>
-                <Text style={styles.adminNewStatValue}>{adminOrders.length}</Text>
-                <Text style={styles.adminNewStatSub}>Lifetime orders</Text>
-              </View>
-              
-              <View style={[styles.adminNewStatCard, styles.adminNewStatCardDark]}>
-                <View style={styles.adminNewStatCardHeader}>
-                  <Text style={[styles.adminNewStatLabel, {color: '#fff'}]}>ACTIVE SHIPMENTS</Text>
+
+                <View style={[styles.adminNewStatCard, styles.adminNewStatCardDark]}>
+                  <View style={styles.adminNewStatCardHeader}>
+                    <Text style={[styles.adminNewStatLabel, { color: '#fff' }]}>ACTIVE SHIPMENTS</Text>
+                  </View>
+                  <Text style={[styles.adminNewStatValue, { color: '#fff' }]}>{adminOrders.filter(o => ['processing', 'delivery'].includes(String(o.status).toLowerCase())).length}</Text>
+                  <Text style={[styles.adminNewStatSub, { color: '#FF9999' }]}>{adminOrders.filter(o => String(o.status).toLowerCase() === 'delivery').length} delivering today</Text>
+                  <Text style={styles.adminDarkCardIcon}>🚚</Text>
                 </View>
-                <Text style={[styles.adminNewStatValue, {color: '#fff'}]}>{adminOrders.filter(o => ['processing', 'delivery'].includes(String(o.status).toLowerCase())).length}</Text>
-                <Text style={[styles.adminNewStatSub, {color: '#FF9999'}]}>{adminOrders.filter(o => String(o.status).toLowerCase() === 'delivery').length} delivering today</Text>
-                <Text style={styles.adminDarkCardIcon}>🚚</Text>
               </View>
-            </View>
             )}
 
             {/* INVENTORY TABLE */}
             {(activeAdminTab === 'Dashboard' || activeAdminTab === 'Inventory') && (
-            <View style={styles.adminDashboardSection}>
-              <View style={styles.adminDashboardSectionHeader}>
-                <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Inventory Management</Text>
-                <Pressable style={styles.adminDarkButton} onPress={() => setAddProductModalVisible(true)}>
-                  <Text style={styles.adminDarkButtonText}>Add New Product</Text>
-                </Pressable>
-              </View>
-
-              <View style={[styles.adminNewTable, { backgroundColor: adm.surface, borderColor: adm.border }]}>
-                <View style={[styles.adminNewTableHeader, { backgroundColor: adm.tableHead, borderBottomColor: adm.border }, isCompactAdmin && { display: 'none' }]}>
-                  <Text style={[styles.adminNewTableCol, {flex: 3}]}>PRODUCT</Text>
-                  <Text style={[styles.adminNewTableCol, {flex: 1}]}>CURRENT STOCK</Text>
-                  <Text style={[styles.adminNewTableCol, {flex: 1}]}>STATUS</Text>
-                  <Text style={[styles.adminNewTableCol, {flex: 0.5, textAlign: 'right'}]}>ACTION</Text>
+              <View style={styles.adminDashboardSection}>
+                <View style={styles.adminDashboardSectionHeader}>
+                  <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Inventory Management</Text>
+                  <Pressable style={styles.adminDarkButton} onPress={() => setAddProductModalVisible(true)}>
+                    <Text style={styles.adminDarkButtonText}>Add New Product</Text>
+                  </Pressable>
                 </View>
-                
-                {productCards.slice(0, activeAdminTab === 'Dashboard' ? 5 : undefined).map((product, idx) => {
-                  const stockValue = Number(product.stock_quantity) || 0;
-                  const isLow = stockValue < 15;
-                  return (
-                    <View key={product.id} style={[styles.adminNewTableRow, { borderBottomColor: adm.border }, isCompactAdmin && { flexDirection: 'column', alignItems: 'flex-start', gap: 10 }]}>
-                      <View style={[{flex: 3, flexDirection: 'row', alignItems: 'center', gap: 12}, isCompactAdmin && { width: '100%' }]}>
-                        <Image source={{uri: product.image}} style={styles.adminNewTableImage} />
-                        <Text style={[styles.adminNewTableTitle, { color: adm.text }]}>{product.name}</Text>
-                      </View>
 
-                      {!isCompactAdmin && (
-                        <>
-                          <View style={{flex: 1, justifyContent: 'center'}}>
-                            <Text style={[styles.adminNewTableText, { color: adm.sub }]}>{stockValue}kg</Text>
-                          </View>
-                          <View style={{flex: 1, justifyContent: 'center'}}>
-                            <View style={isLow ? styles.adminStatusBadgeRed : styles.adminStatusBadgeGreen}>
-                              <Text style={isLow ? styles.adminStatusBadgeRedText : styles.adminStatusBadgeGreenText}>
-                                {isLow ? 'Low Stock' : 'In Stock'}
-                              </Text>
+                <View style={[styles.adminNewTable, { backgroundColor: adm.surface, borderColor: adm.border }]}>
+                  <View style={[styles.adminNewTableHeader, { backgroundColor: adm.tableHead, borderBottomColor: adm.border }, isCompactAdmin && { display: 'none' }]}>
+                    <Text style={[styles.adminNewTableCol, { flex: 3 }]}>PRODUCT</Text>
+                    <Text style={[styles.adminNewTableCol, { flex: 1 }]}>CURRENT STOCK</Text>
+                    <Text style={[styles.adminNewTableCol, { flex: 1 }]}>STATUS</Text>
+                    <Text style={[styles.adminNewTableCol, { flex: 0.5, textAlign: 'right' }]}>ACTION</Text>
+                  </View>
+
+                  {productCards.slice(0, activeAdminTab === 'Dashboard' ? 5 : undefined).map((product, idx) => {
+                    const stockValue = Number(product.stock_quantity) || 0;
+                    const isLow = stockValue < 15;
+                    return (
+                      <View key={product.id} style={[styles.adminNewTableRow, { borderBottomColor: adm.border }, isCompactAdmin && { flexDirection: 'column', alignItems: 'flex-start', gap: 10 }]}>
+                        <View style={[{ flex: 3, flexDirection: 'row', alignItems: 'center', gap: 12 }, isCompactAdmin && { width: '100%' }]}>
+                          <Image source={{ uri: product.image }} style={styles.adminNewTableImage} />
+                          <Text style={[styles.adminNewTableTitle, { color: adm.text }]}>{product.name}</Text>
+                        </View>
+
+                        {!isCompactAdmin && (
+                          <>
+                            <View style={{ flex: 1, justifyContent: 'center' }}>
+                              <Text style={[styles.adminNewTableText, { color: adm.sub }]}>{stockValue}kg</Text>
                             </View>
-                          </View>
-                        </>
-                      )}
+                            <View style={{ flex: 1, justifyContent: 'center' }}>
+                              <View style={isLow ? styles.adminStatusBadgeRed : styles.adminStatusBadgeGreen}>
+                                <Text style={isLow ? styles.adminStatusBadgeRedText : styles.adminStatusBadgeGreenText}>
+                                  {isLow ? 'Low Stock' : 'In Stock'}
+                                </Text>
+                              </View>
+                            </View>
+                          </>
+                        )}
 
-                      <View style={[{flex: 0.5, alignItems: 'flex-end', justifyContent: 'center'}, isCompactAdmin && { position: 'absolute', right: 20, top: 28 }]}>
-                        <Pressable onPress={() => {
-                          setEditingProduct({
-                            id: product.id,
-                            name: product.name,
-                            price_250g: String(product.price_250g ?? '0'),
-                            price_500g: String(product.price_500g ?? '0'),
-                            price_1kg: String(product.price_1kg ?? '0'),
-                            price: String(product.price ?? ''),
-                            hasWeights: product.hasWeights ?? true,
-                            tag: product.tag || '',
-                            categoryLabel: product.categoryLabel || '',
-                            description: product.description || '',
-                            image: product.image || '',
-                            stock_quantity: String(product.stock_quantity || '0'),
-                          });
-                          setEditProductModalVisible(true);
-                        }}>
-                          <Text style={styles.adminEditIcon}>✎</Text>
-                        </Pressable>
+                        <View style={[{ flex: 0.5, alignItems: 'flex-end', justifyContent: 'center' }, isCompactAdmin && { position: 'absolute', right: 20, top: 28 }]}>
+                          <Pressable onPress={() => {
+                            setEditingProduct({
+                              id: product.id,
+                              name: product.name,
+                              price_250g: String(product.price_250g ?? '0'),
+                              price_500g: String(product.price_500g ?? '0'),
+                              price_1kg: String(product.price_1kg ?? '0'),
+                              price: String(product.price ?? ''),
+                              hasWeights: product.hasWeights ?? true,
+                              tag: product.tag || '',
+                              categoryLabel: product.categoryLabel || '',
+                              description: product.description || '',
+                              image: product.image || '',
+                              stock_quantity: String(product.stock_quantity || '0'),
+                            });
+                            setEditProductModalVisible(true);
+                          }}>
+                            <Text style={styles.adminEditIcon}>✎</Text>
+                          </Pressable>
+                        </View>
                       </View>
-                    </View>
-                  );
-                })}
+                    );
+                  })}
+                </View>
               </View>
-            </View>
             )}
 
             {/* RECENT ORDERS */}
             {(activeAdminTab === 'Dashboard' || activeAdminTab === 'Orders') && (
-            <View style={styles.adminDashboardSection}>
-              <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>{activeAdminTab === 'Orders' ? 'All Orders' : 'Recent Orders'}</Text>
-              <View style={styles.adminOrdersList}>
-                {(adminOrders.length > 0 ? (activeAdminTab === 'Dashboard' ? adminOrders.slice(0, 3) : adminOrders) : [
-                  {id: '#MC-84920', status: 'PROCESSING', metadata: { customer_name: 'A. Thompson', customer_phone: '+233241234567' }, order_items: [1,2], total: 84.50},
-                  {id: '#MC-84919', status: 'DELIVERY', metadata: { customer_name: 'J. Richards', customer_phone: '+233209876543' }, order_items: [1,2,3,4,5], total: 212.00},
-                  {id: '#MC-84918', status: 'PROCESSING', metadata: { customer_name: 'L. Sterling', customer_phone: '+233551112233' }, order_items: [1], total: 45.99},
-                ]).map(order => (
-                  <View key={order.id} style={[styles.adminNewOrderCard, {flexDirection: 'column', gap: 10}]}>
-                    {/* Order ID row with status badge on the right */}
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                      <Text style={[styles.adminOrderCardId, { color: adm.sub }]}>{String(order.id).slice(0, 14)}</Text>
-                      {/* Status badge — tap to cycle */}
+              <View style={styles.adminDashboardSection}>
+                <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>{activeAdminTab === 'Orders' ? 'All Orders' : 'Recent Orders'}</Text>
+                <View style={styles.adminOrdersList}>
+                  {(adminOrders.length > 0 ? (activeAdminTab === 'Dashboard' ? adminOrders.slice(0, 3) : adminOrders) : [
+                    { id: '#MC-84920', status: 'PROCESSING', metadata: { customer_name: 'A. Thompson', customer_phone: '+233241234567' }, order_items: [1, 2], total: 84.50 },
+                    { id: '#MC-84919', status: 'DELIVERY', metadata: { customer_name: 'J. Richards', customer_phone: '+233209876543' }, order_items: [1, 2, 3, 4, 5], total: 212.00 },
+                    { id: '#MC-84918', status: 'PROCESSING', metadata: { customer_name: 'L. Sterling', customer_phone: '+233551112233' }, order_items: [1], total: 45.99 },
+                  ]).map(order => (
+                    <View key={order.id} style={[styles.adminNewOrderCard, { flexDirection: 'column', gap: 10 }]}>
+                      {/* Order ID row with status badge on the right */}
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Text style={[styles.adminOrderCardId, { color: adm.sub }]}>{String(order.id).slice(0, 14)}</Text>
+                        {/* Status badge — tap to cycle */}
+                        <Pressable
+                          onPress={() => {
+                            const statuses = ['Pending', 'Processing', 'Delivery', 'Delivered'];
+                            const currentIdx = statuses.findIndex(s => String(order.status).toLowerCase() === s.toLowerCase());
+                            const nextStatus = statuses[(currentIdx + 1) % statuses.length];
+                            updateOrderStatus(order.id, nextStatus);
+                          }}
+                          style={[
+                            styles.adminOrderCardStatusBadge,
+                            {
+                              backgroundColor: String(order.status).toLowerCase() === 'pending' ? '#FFF3CD' :
+                                String(order.status).toLowerCase() === 'processing' ? '#CCE5FF' :
+                                  String(order.status).toLowerCase() === 'delivery' ? '#D4EDDA' :
+                                    String(order.status).toLowerCase() === 'delivered' ? '#A855F7' : '#F3F4F6'
+                            }
+                          ]}
+                        >
+                          <Text style={[
+                            styles.adminOrderCardStatusText,
+                            {
+                              color: String(order.status).toLowerCase() === 'pending' ? '#856404' :
+                                String(order.status).toLowerCase() === 'processing' ? '#004085' :
+                                  String(order.status).toLowerCase() === 'delivery' ? '#155724' :
+                                    String(order.status).toLowerCase() === 'delivered' ? '#FFFFFF' : '#6B7280'
+                            }
+                          ]}>{String(order.status).toUpperCase()}</Text>
+                        </Pressable>
+                      </View>
+
+                      {/* Customer name + icons */}
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                        <Text style={[styles.adminOrderCardUser, { color: adm.text }]}>{order.metadata?.customer_name || 'Guest'}</Text>
+                        <Pressable onPress={() => {
+                          const phone = order.metadata?.customer_phone || '+233240000000';
+                          let waPhone = phone.replace(/[^0-9]/g, '');
+                          if (waPhone.startsWith('0')) waPhone = '233' + waPhone.substring(1);
+                          Linking.openURL(`https://wa.me/${waPhone}`);
+                        }}>
+                          <FontAwesome name="whatsapp" size={16} color="#10B981" />
+                        </Pressable>
+                        <Pressable onPress={() => deleteOrder(order.id)}>
+                          <FontAwesome name="trash-o" size={16} color="#D26A5F" />
+                        </Pressable>
+                      </View>
+
+                      {/* Items + address on left, amount on right */}
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Text style={[styles.adminOrderCardMeta, { color: adm.sub }]}>
+                          {(order.order_items?.length || 1)} Item{(order.order_items?.length !== 1) ? 's' : ''}
+                          {order.metadata?.delivery_address ? ` • ${String(order.metadata.delivery_address).slice(0, 25)}…` : ' • Pickup'}
+                        </Text>
+                        <Text style={styles.adminOrderCardAmount}>{formatCurrency(order.total || 0)}</Text>
+                      </View>
+
+                      {/* Send to Rider button — opens Rider Picker */}
                       <Pressable
                         onPress={() => {
-                          const statuses = ['Pending', 'Processing', 'Delivery', 'Delivered'];
-                          const currentIdx = statuses.findIndex(s => String(order.status).toLowerCase() === s.toLowerCase());
-                          const nextStatus = statuses[(currentIdx + 1) % statuses.length];
-                          updateOrderStatus(order.id, nextStatus);
+                          setRiderPickerOrder({
+                            id: order.id,
+                            customer_name: order.metadata?.customer_name || 'Customer',
+                            customer_phone: order.metadata?.customer_phone || '',
+                            customer_email: order.metadata?.customer_email || '',
+                            total: order.total || 0,
+                            payment_method: 'Cash on Delivery',
+                            order_items: (order.order_items || []).map(item => ({
+                              product_name: item.product_name || item.products?.name || 'Product',
+                              quantity: item.quantity || 1,
+                            })),
+                          });
+                          setRiderPickerDelivery({
+                            address: order.metadata?.delivery_address || 'Address not provided',
+                            latitude: order.metadata?.latitude || null,
+                            longitude: order.metadata?.longitude || null,
+                            distance: order.metadata?.distance || null,
+                            estimatedTime: order.metadata?.estimated_time || null,
+                          });
+                          setRiderPickerVisible(true);
                         }}
-                        style={[
-                          styles.adminOrderCardStatusBadge,
-                          { backgroundColor: String(order.status).toLowerCase() === 'pending' ? '#FFF3CD' :
-                                            String(order.status).toLowerCase() === 'processing' ? '#CCE5FF' :
-                                            String(order.status).toLowerCase() === 'delivery' ? '#D4EDDA' :
-                                            String(order.status).toLowerCase() === 'delivered' ? '#A855F7' : '#F3F4F6' }
-                        ]}
+                        style={{
+                          flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                          backgroundColor: '#25D366', borderRadius: 8,
+                          paddingHorizontal: 14, paddingVertical: 10, gap: 8, marginTop: 10,
+                        }}
                       >
-                        <Text style={[
-                          styles.adminOrderCardStatusText,
-                          { color: String(order.status).toLowerCase() === 'pending' ? '#856404' :
-                                   String(order.status).toLowerCase() === 'processing' ? '#004085' :
-                                   String(order.status).toLowerCase() === 'delivery' ? '#155724' :
-                                   String(order.status).toLowerCase() === 'delivered' ? '#FFFFFF' : '#6B7280' }
-                        ]}>{String(order.status).toUpperCase()}</Text>
+                        <FontAwesome name="motorcycle" size={15} color="#fff" />
+                        <Text style={{ color: '#fff', fontWeight: '700', fontSize: 13 }}>Send to Rider</Text>
                       </Pressable>
                     </View>
-
-                    {/* Customer name + icons */}
-                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap'}}>
-                      <Text style={[styles.adminOrderCardUser, { color: adm.text }]}>{order.metadata?.customer_name || 'Guest'}</Text>
-                      <Pressable onPress={() => {
-                        const phone = order.metadata?.customer_phone || '+233240000000';
-                        let waPhone = phone.replace(/[^0-9]/g, '');
-                        if (waPhone.startsWith('0')) waPhone = '233' + waPhone.substring(1);
-                        Linking.openURL(`https://wa.me/${waPhone}`);
-                      }}>
-                        <FontAwesome name="whatsapp" size={16} color="#10B981" />
-                      </Pressable>
-                      <Pressable onPress={() => deleteOrder(order.id)}>
-                        <FontAwesome name="trash-o" size={16} color="#D26A5F" />
-                      </Pressable>
-                    </View>
-
-                    {/* Items + address on left, amount on right */}
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                      <Text style={[styles.adminOrderCardMeta, { color: adm.sub }]}>
-                        {(order.order_items?.length || 1)} Item{(order.order_items?.length !== 1) ? 's' : ''}
-                        {order.metadata?.delivery_address ? ` • ${String(order.metadata.delivery_address).slice(0, 25)}…` : ' • Pickup'}
-                      </Text>
-                      <Text style={styles.adminOrderCardAmount}>{formatCurrency(order.total || 0)}</Text>
-                    </View>
-
-                    {/* Send to Rider button — opens Rider Picker */}
-                    <Pressable
-                      onPress={() => {
-                        setRiderPickerOrder({
-                          id: order.id,
-                          customer_name: order.metadata?.customer_name || 'Customer',
-                          customer_phone: order.metadata?.customer_phone || '',
-                          customer_email: order.metadata?.customer_email || '',
-                          total: order.total || 0,
-                          payment_method: 'Cash on Delivery',
-                          order_items: (order.order_items || []).map(item => ({
-                            product_name: item.product_name || item.products?.name || 'Product',
-                            quantity: item.quantity || 1,
-                          })),
-                        });
-                        setRiderPickerDelivery({
-                          address: order.metadata?.delivery_address || 'Address not provided',
-                          latitude: order.metadata?.latitude || null,
-                          longitude: order.metadata?.longitude || null,
-                          distance: order.metadata?.distance || null,
-                          estimatedTime: order.metadata?.estimated_time || null,
-                        });
-                        setRiderPickerVisible(true);
-                      }}
-                      style={{
-                        flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-                        backgroundColor: '#25D366', borderRadius: 8,
-                        paddingHorizontal: 14, paddingVertical: 10, gap: 8, marginTop: 10,
-                      }}
-                    >
-                      <FontAwesome name="motorcycle" size={15} color="#fff" />
-                      <Text style={{color: '#fff', fontWeight: '700', fontSize: 13}}>Send to Rider</Text>
-                    </Pressable>
-                  </View>
-                ))}
+                  ))}
+                </View>
+                {activeAdminTab === 'Dashboard' && (
+                  <Pressable style={styles.adminOutlineButton} onPress={() => setActiveAdminTab('Orders')}>
+                    <Text style={styles.adminOutlineButtonText}>View All Orders</Text>
+                  </Pressable>
+                )}
               </View>
-              {activeAdminTab === 'Dashboard' && (
-                <Pressable style={styles.adminOutlineButton} onPress={() => setActiveAdminTab('Orders')}>
-                  <Text style={styles.adminOutlineButtonText}>View All Orders</Text>
-                </Pressable>
-              )}
-            </View>
             )}
 
             {/* CUSTOMERS CRM */}
             {(activeAdminTab === 'Customers') && (
-            <View style={styles.adminDashboardSection}>
-              {/* Header row */}
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4}}>
-                <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Customer CRM</Text>
-                <View style={{backgroundColor: '#F3F4F6', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12}}>
-                  <Text style={{fontSize: 12, fontWeight: '700', color: '#5F5E5F'}}>{uniqueCustomers.length} customers</Text>
+              <View style={styles.adminDashboardSection}>
+                {/* Header row */}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                  <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Customer CRM</Text>
+                  <View style={{ backgroundColor: '#F3F4F6', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 }}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: '#5F5E5F' }}>{uniqueCustomers.length} customers</Text>
+                  </View>
                 </View>
-              </View>
 
-              {/* Search Bar */}
-              <View style={{flexDirection: 'row', alignItems: 'center', backgroundColor: '#F9F9F9', borderWidth: 1, borderColor: '#E5E7EB', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 14, gap: 8}}>
-                <FontAwesome name="search" size={13} color="#9CA3AF" />
-                <TextInput
-                  placeholder="Search by name, phone or email..."
-                  placeholderTextColor="#9CA3AF"
-                  value={customerSearch}
-                  onChangeText={setCustomerSearch}
-                  style={{flex: 1, fontSize: 13, color: '#1B1C1C', padding: 0}}
-                />
-                {customerSearch.length > 0 && (
-                  <Pressable onPress={() => setCustomerSearch('')}>
-                    <FontAwesome name="times-circle" size={14} color="#9CA3AF" />
-                  </Pressable>
+                {/* Search Bar */}
+                <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F9F9F9', borderWidth: 1, borderColor: '#E5E7EB', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 14, gap: 8 }}>
+                  <FontAwesome name="search" size={13} color="#9CA3AF" />
+                  <TextInput
+                    placeholder="Search by name, phone or email..."
+                    placeholderTextColor="#9CA3AF"
+                    value={customerSearch}
+                    onChangeText={setCustomerSearch}
+                    style={{ flex: 1, fontSize: 13, color: '#1B1C1C', padding: 0 }}
+                  />
+                  {customerSearch.length > 0 && (
+                    <Pressable onPress={() => setCustomerSearch('')}>
+                      <FontAwesome name="times-circle" size={14} color="#9CA3AF" />
+                    </Pressable>
+                  )}
+                </View>
+
+                {/* Duplicate Warning Banner */}
+                {uniqueCustomers.some(c => c.isDuplicate) && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#FFFBEB', borderWidth: 1, borderColor: '#FDE68A', borderRadius: 8, padding: 10, marginBottom: 12 }}>
+                    <FontAwesome name="exclamation-triangle" size={13} color="#D97706" />
+                    <Text style={{ fontSize: 12, color: '#92400E', flex: 1 }}>
+                      Some customers share the same name but have different phone numbers — possible duplicates.
+                    </Text>
+                  </View>
                 )}
-              </View>
 
-              {/* Duplicate Warning Banner */}
-              {uniqueCustomers.some(c => c.isDuplicate) && (
-                <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#FFFBEB', borderWidth: 1, borderColor: '#FDE68A', borderRadius: 8, padding: 10, marginBottom: 12}}>
-                  <FontAwesome name="exclamation-triangle" size={13} color="#D97706" />
-                  <Text style={{fontSize: 12, color: '#92400E', flex: 1}}>
-                    Some customers share the same name but have different phone numbers — possible duplicates.
-                  </Text>
-                </View>
-              )}
-
-              {/* Customer Cards */}
-              <View style={styles.adminOrdersList}>
-                {(() => {
-                  const q = customerSearch.trim().toLowerCase();
-                  const filtered = uniqueCustomers.filter(c =>
-                    !q ||
-                    (c.name || '').toLowerCase().includes(q) ||
-                    (c.phone || '').includes(q) ||
-                    (c.email || '').toLowerCase().includes(q)
-                  );
-
-                  if (filtered.length === 0) {
-                    return (
-                      <View style={{alignItems: 'center', paddingVertical: 40, gap: 8}}>
-                        <FontAwesome name="search" size={32} color="#E0E0E0" />
-                        <Text style={{color: '#888', fontSize: 13}}>No customers match "{customerSearch}"</Text>
-                      </View>
+                {/* Customer Cards */}
+                <View style={styles.adminOrdersList}>
+                  {(() => {
+                    const q = customerSearch.trim().toLowerCase();
+                    const filtered = uniqueCustomers.filter(c =>
+                      !q ||
+                      (c.name || '').toLowerCase().includes(q) ||
+                      (c.phone || '').includes(q) ||
+                      (c.email || '').toLowerCase().includes(q)
                     );
-                  }
 
-                  return filtered.map((customer, idx) => {
-                    const isExpanded = expandedCustomerPhone === customer.phone;
-                    return (
-                      <View key={idx} style={[styles.adminNewOrderCard, {flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden'}]}>
+                    if (filtered.length === 0) {
+                      return (
+                        <View style={{ alignItems: 'center', paddingVertical: 40, gap: 8 }}>
+                          <FontAwesome name="search" size={32} color="#E0E0E0" />
+                          <Text style={{ color: '#888', fontSize: 13 }}>No customers match "{customerSearch}"</Text>
+                        </View>
+                      );
+                    }
 
-                        {/* Card Header — tap to expand */}
-                        <Pressable
-                          onPress={() => setExpandedCustomerPhone(isExpanded ? null : customer.phone)}
-                          style={{flexDirection: 'row', alignItems: 'center', padding: 14, gap: 12}}
-                        >
-                          {/* Avatar */}
-                          <View style={{width: 44, height: 44, borderRadius: 22, backgroundColor: '#4A0404', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>
-                            <Text style={{color: '#fff', fontWeight: '700', fontSize: 16}}>
-                              {(customer.name || 'G').charAt(0).toUpperCase()}
-                            </Text>
-                          </View>
+                    return filtered.map((customer, idx) => {
+                      const isExpanded = expandedCustomerPhone === customer.phone;
+                      return (
+                        <View key={idx} style={[styles.adminNewOrderCard, { flexDirection: 'column', gap: 0, padding: 0, overflow: 'hidden' }]}>
 
-                          {/* Info */}
-                          <View style={{flex: 1}}>
-                            <View style={{flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap'}}>
-                              <Text style={{fontSize: 14, fontWeight: '700', color: '#1B1C1C'}}>{customer.name}</Text>
-                              {customer.isDuplicate && (
-                                <View style={{backgroundColor: '#FEF9C3', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, flexDirection: 'row', alignItems: 'center', gap: 3}}>
-                                  <FontAwesome name="exclamation-triangle" size={9} color="#D97706" />
-                                  <Text style={{fontSize: 9, fontWeight: '700', color: '#D97706'}}>POSSIBLE DUPLICATE</Text>
-                                </View>
-                              )}
+                          {/* Card Header — tap to expand */}
+                          <Pressable
+                            onPress={() => setExpandedCustomerPhone(isExpanded ? null : customer.phone)}
+                            style={{ flexDirection: 'row', alignItems: 'center', padding: 14, gap: 12 }}
+                          >
+                            {/* Avatar */}
+                            <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#4A0404', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <Text style={{ color: '#fff', fontWeight: '700', fontSize: 16 }}>
+                                {(customer.name || 'G').charAt(0).toUpperCase()}
+                              </Text>
                             </View>
-                            <Text style={{fontSize: 12, color: '#5F5E5F', marginTop: 2}}>{customer.phone}</Text>
-                            <Text style={{fontSize: 11, color: '#9CA3AF', marginTop: 1}}>
-                              {customer.orderCount} order{customer.orderCount !== 1 ? 's' : ''} · {customer.email}
-                            </Text>
-                          </View>
 
-                          {/* Right side */}
-                          <View style={{alignItems: 'flex-end', gap: 6}}>
-                            <Text style={{fontSize: 14, fontWeight: '700', color: '#4A0404'}}>{formatCurrency(customer.totalSpent)}</Text>
-                            <Pressable
-                              onPress={(e) => { e.stopPropagation(); setCustomMsgText(''); setCustomerMsgModal(customer); }}
-                              style={{backgroundColor: '#25D366', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6, flexDirection: 'row', alignItems: 'center', gap: 5}}
-                            >
-                              <FontAwesome name="whatsapp" size={13} color="#fff" />
-                              <Text style={{color: '#fff', fontWeight: '700', fontSize: 11}}>Message</Text>
-                            </Pressable>
-                            <FontAwesome name={isExpanded ? 'chevron-up' : 'chevron-down'} size={11} color="#9CA3AF" />
-                          </View>
-                        </Pressable>
-
-                        {/* Expanded Order History */}
-                        {isExpanded && (
-                          <View style={{borderTopWidth: 1, borderTopColor: '#F3F4F6', backgroundColor: '#FAFAFA'}}>
-                            <View style={{paddingHorizontal: 14, paddingTop: 10, paddingBottom: 4}}>
-                              <Text style={{fontSize: 11, fontWeight: '700', color: '#5F5E5F', letterSpacing: 0.5}}>ORDER HISTORY</Text>
+                            {/* Info */}
+                            <View style={{ flex: 1 }}>
+                              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                                <Text style={{ fontSize: 14, fontWeight: '700', color: '#1B1C1C' }}>{customer.name}</Text>
+                                {customer.isDuplicate && (
+                                  <View style={{ backgroundColor: '#FEF9C3', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                                    <FontAwesome name="exclamation-triangle" size={9} color="#D97706" />
+                                    <Text style={{ fontSize: 9, fontWeight: '700', color: '#D97706' }}>POSSIBLE DUPLICATE</Text>
+                                  </View>
+                                )}
+                              </View>
+                              <Text style={{ fontSize: 12, color: '#5F5E5F', marginTop: 2 }}>{customer.phone}</Text>
+                              <Text style={{ fontSize: 11, color: '#9CA3AF', marginTop: 1 }}>
+                                {customer.orderCount} order{customer.orderCount !== 1 ? 's' : ''} · {customer.email}
+                              </Text>
                             </View>
-                            {(customer.orders || []).sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((ord, oi) => (
-                              <View key={oi} style={{flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, borderTopWidth: oi > 0 ? 1 : 0, borderTopColor: '#F0F0F0', gap: 10}}>
-                                <View style={{flex: 1}}>
-                                  <Text style={{fontSize: 12, fontWeight: '600', color: '#1B1C1C'}}>#{String(ord.id).slice(0, 8).toUpperCase()}</Text>
-                                  <Text style={{fontSize: 11, color: '#9CA3AF', marginTop: 2}}>
-                                    {ord.created_at ? new Date(ord.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : 'Unknown date'}
-                                  </Text>
-                                  {(ord.order_items || []).length > 0 && (
-                                    <Text style={{fontSize: 11, color: '#5F5E5F', marginTop: 2}} numberOfLines={1}>
-                                      {(ord.order_items || []).map(it => `${it.product_name || it.products?.name || 'Item'} x${it.quantity || 1}`).join(', ')}
+
+                            {/* Right side */}
+                            <View style={{ alignItems: 'flex-end', gap: 6 }}>
+                              <Text style={{ fontSize: 14, fontWeight: '700', color: '#4A0404' }}>{formatCurrency(customer.totalSpent)}</Text>
+                              <Pressable
+                                onPress={(e) => { e.stopPropagation(); setCustomMsgText(''); setCustomerMsgModal(customer); }}
+                                style={{ backgroundColor: '#25D366', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6, flexDirection: 'row', alignItems: 'center', gap: 5 }}
+                              >
+                                <FontAwesome name="whatsapp" size={13} color="#fff" />
+                                <Text style={{ color: '#fff', fontWeight: '700', fontSize: 11 }}>Message</Text>
+                              </Pressable>
+                              <FontAwesome name={isExpanded ? 'chevron-up' : 'chevron-down'} size={11} color="#9CA3AF" />
+                            </View>
+                          </Pressable>
+
+                          {/* Expanded Order History */}
+                          {isExpanded && (
+                            <View style={{ borderTopWidth: 1, borderTopColor: '#F3F4F6', backgroundColor: '#FAFAFA' }}>
+                              <View style={{ paddingHorizontal: 14, paddingTop: 10, paddingBottom: 4 }}>
+                                <Text style={{ fontSize: 11, fontWeight: '700', color: '#5F5E5F', letterSpacing: 0.5 }}>ORDER HISTORY</Text>
+                              </View>
+                              {(customer.orders || []).sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((ord, oi) => (
+                                <View key={oi} style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, borderTopWidth: oi > 0 ? 1 : 0, borderTopColor: '#F0F0F0', gap: 10 }}>
+                                  <View style={{ flex: 1 }}>
+                                    <Text style={{ fontSize: 12, fontWeight: '600', color: '#1B1C1C' }}>#{String(ord.id).slice(0, 8).toUpperCase()}</Text>
+                                    <Text style={{ fontSize: 11, color: '#9CA3AF', marginTop: 2 }}>
+                                      {ord.created_at ? new Date(ord.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Unknown date'}
                                     </Text>
-                                  )}
-                                </View>
-                                <View style={{alignItems: 'flex-end', gap: 4}}>
-                                  <Text style={{fontSize: 13, fontWeight: '700', color: '#1B1C1C'}}>{formatCurrency(ord.total || 0)}</Text>
-                                  <View style={{
-                                    backgroundColor:
-                                      ord.status === 'DELIVERED' ? '#ECFDF5' :
-                                      ord.status === 'Delivery' ? '#EFF6FF' :
-                                      ord.status === 'PROCESSING' ? '#FEF9C3' : '#F3F4F6',
-                                    paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4,
-                                  }}>
-                                    <Text style={{
-                                      fontSize: 9, fontWeight: '700', letterSpacing: 0.5,
-                                      color:
-                                        ord.status === 'DELIVERED' ? '#10B981' :
-                                        ord.status === 'Delivery' ? '#3B82F6' :
-                                        ord.status === 'PROCESSING' ? '#D97706' : '#6B7280',
-                                    }}>{ord.status || 'PENDING'}</Text>
+                                    {(ord.order_items || []).length > 0 && (
+                                      <Text style={{ fontSize: 11, color: '#5F5E5F', marginTop: 2 }} numberOfLines={1}>
+                                        {(ord.order_items || []).map(it => `${it.product_name || it.products?.name || 'Item'} x${it.quantity || 1}`).join(', ')}
+                                      </Text>
+                                    )}
+                                  </View>
+                                  <View style={{ alignItems: 'flex-end', gap: 4 }}>
+                                    <Text style={{ fontSize: 13, fontWeight: '700', color: '#1B1C1C' }}>{formatCurrency(ord.total || 0)}</Text>
+                                    <View style={{
+                                      backgroundColor:
+                                        ord.status === 'DELIVERED' ? '#ECFDF5' :
+                                          ord.status === 'Delivery' ? '#EFF6FF' :
+                                            ord.status === 'PROCESSING' ? '#FEF9C3' : '#F3F4F6',
+                                      paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4,
+                                    }}>
+                                      <Text style={{
+                                        fontSize: 9, fontWeight: '700', letterSpacing: 0.5,
+                                        color:
+                                          ord.status === 'DELIVERED' ? '#10B981' :
+                                            ord.status === 'Delivery' ? '#3B82F6' :
+                                              ord.status === 'PROCESSING' ? '#D97706' : '#6B7280',
+                                      }}>{ord.status || 'PENDING'}</Text>
+                                    </View>
                                   </View>
                                 </View>
-                              </View>
-                            ))}
-                          </View>
-                        )}
-                      </View>
-                    );
-                  });
-                })()}
+                              ))}
+                            </View>
+                          )}
+                        </View>
+                      );
+                    });
+                  })()}
+                </View>
               </View>
-            </View>
             )}
 
             {/* RIDERS TAB */}
             {activeAdminTab === 'Riders' && (
-            <View style={styles.adminDashboardSection}>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16}}>
-                <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Delivery Riders</Text>
-                <Pressable
-                  onPress={() => setShowAddRiderForm(prev => !prev)}
-                  style={{
-                    backgroundColor: showAddRiderForm ? '#E5E7EB' : '#4A0404',
-                    paddingHorizontal: 16, paddingVertical: 10,
-                    borderRadius: 6, flexDirection: 'row', alignItems: 'center', gap: 8,
-                  }}
-                >
-                  <FontAwesome name={showAddRiderForm ? 'times' : 'plus'} size={13} color={showAddRiderForm ? '#1B1C1C' : '#fff'} />
-                  <Text style={{color: showAddRiderForm ? '#1B1C1C' : '#fff', fontWeight: '700', fontSize: 13}}>
-                    {showAddRiderForm ? 'Cancel' : 'Add Rider'}
-                  </Text>
-                </Pressable>
-              </View>
-
-              {showAddRiderForm && (
-                <View style={[styles.adminNewOrderCard, {flexDirection: 'column', gap: 12, marginBottom: 20}]}>
-                  <Text style={{fontSize: 12, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5}}>NEW RIDER</Text>
-                  <TextInput
-                    placeholder="Full Name"
-                    placeholderTextColor="#999"
-                    value={newRiderName}
-                    onChangeText={setNewRiderName}
-                    style={{borderWidth: 1, borderColor: '#E0E0E0', borderRadius: 6, padding: 10, fontSize: 14, color: '#1B1C1C', backgroundColor: '#FAFAFA'}}
-                  />
-                  <TextInput
-                    placeholder="WhatsApp Number (e.g. +233241234567)"
-                    placeholderTextColor="#999"
-                    value={newRiderPhone}
-                    onChangeText={setNewRiderPhone}
-                    keyboardType="phone-pad"
-                    style={{borderWidth: 1, borderColor: '#E0E0E0', borderRadius: 6, padding: 10, fontSize: 14, color: '#1B1C1C', backgroundColor: '#FAFAFA'}}
-                  />
-                  <TextInput
-                    placeholder="Notes (optional)"
-                    placeholderTextColor="#999"
-                    value={newRiderNotes}
-                    onChangeText={setNewRiderNotes}
-                    style={{borderWidth: 1, borderColor: '#E0E0E0', borderRadius: 6, padding: 10, fontSize: 14, color: '#1B1C1C', backgroundColor: '#FAFAFA'}}
-                  />
+              <View style={styles.adminDashboardSection}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                  <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Delivery Riders</Text>
                   <Pressable
-                    onPress={addRider}
-                    disabled={addRiderLoading}
-                    style={{backgroundColor: addRiderLoading ? '#ccc' : '#25D366', padding: 13, borderRadius: 6, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8}}
+                    onPress={() => setShowAddRiderForm(prev => !prev)}
+                    style={{
+                      backgroundColor: showAddRiderForm ? '#E5E7EB' : '#4A0404',
+                      paddingHorizontal: 16, paddingVertical: 10,
+                      borderRadius: 6, flexDirection: 'row', alignItems: 'center', gap: 8,
+                    }}
                   >
-                    <FontAwesome name="user-plus" size={14} color="#fff" />
-                    <Text style={{color: '#fff', fontWeight: '700', fontSize: 13}}>
-                      {addRiderLoading ? 'Saving...' : 'Save Rider'}
+                    <FontAwesome name={showAddRiderForm ? 'times' : 'plus'} size={13} color={showAddRiderForm ? '#1B1C1C' : '#fff'} />
+                    <Text style={{ color: showAddRiderForm ? '#1B1C1C' : '#fff', fontWeight: '700', fontSize: 13 }}>
+                      {showAddRiderForm ? 'Cancel' : 'Add Rider'}
                     </Text>
                   </Pressable>
                 </View>
-              )}
 
-              {ridersLoading ? (
-                <ActivityIndicator size="large" color="#4A0404" style={{marginVertical: 40}} />
-              ) : riders.length === 0 ? (
-                <View style={[styles.adminNewOrderCard, {flexDirection: 'column', alignItems: 'center', paddingVertical: 48, gap: 12}]}>
-                  <FontAwesome name="motorcycle" size={48} color="#E0E0E0" />
-                  <Text style={{fontSize: 16, fontWeight: '700', color: '#1B1C1C'}}>No Riders Yet</Text>
-                  <Text style={{fontSize: 13, color: '#888', textAlign: 'center'}}>
-                    Tap "Add Rider" above to add your first delivery rider.
-                  </Text>
-                  <Pressable onPress={fetchRiders} style={{backgroundColor: '#F3F4F6', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 6}}>
-                    <Text style={{fontSize: 12, fontWeight: '700', color: '#4A0404'}}>↺ Refresh</Text>
-                  </Pressable>
-                </View>
-              ) : (
-                <View style={{gap: 12}}>
-                  {riders.map((rider) => (
-                    <View key={rider.id} style={[styles.adminNewOrderCard, {flexDirection: 'row', alignItems: 'center', borderLeftWidth: 4, borderLeftColor: rider.is_active ? '#25D366' : '#D1D5DB', gap: 14}]}>
-                      <View style={{width: 52, height: 52, borderRadius: 26, backgroundColor: rider.is_active ? '#25D366' : '#D1D5DB', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>
-                        <Text style={{color: '#fff', fontWeight: '700', fontSize: 20}}>{rider.name.charAt(0).toUpperCase()}</Text>
-                      </View>
-                      <View style={{flex: 1}}>
-                        <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap'}}>
-                          <Text style={{fontSize: 15, fontWeight: '700', color: '#1B1C1C'}}>{rider.name}</Text>
-                          <View style={{backgroundColor: rider.is_active ? '#ECFDF5' : '#F3F4F6', paddingHorizontal: 7, paddingVertical: 3, borderRadius: 4}}>
-                            <Text style={{fontSize: 9, fontWeight: '700', color: rider.is_active ? '#10B981' : '#9CA3AF', letterSpacing: 0.8}}>
-                              {rider.is_active ? 'ACTIVE' : 'INACTIVE'}
-                            </Text>
-                          </View>
+                {showAddRiderForm && (
+                  <View style={[styles.adminNewOrderCard, { flexDirection: 'column', gap: 12, marginBottom: 20 }]}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5 }}>NEW RIDER</Text>
+                    <TextInput
+                      placeholder="Full Name"
+                      placeholderTextColor="#999"
+                      value={newRiderName}
+                      onChangeText={setNewRiderName}
+                      style={{ borderWidth: 1, borderColor: '#E0E0E0', borderRadius: 6, padding: 10, fontSize: 14, color: '#1B1C1C', backgroundColor: '#FAFAFA' }}
+                    />
+                    <TextInput
+                      placeholder="WhatsApp Number (e.g. +233241234567)"
+                      placeholderTextColor="#999"
+                      value={newRiderPhone}
+                      onChangeText={setNewRiderPhone}
+                      keyboardType="phone-pad"
+                      style={{ borderWidth: 1, borderColor: '#E0E0E0', borderRadius: 6, padding: 10, fontSize: 14, color: '#1B1C1C', backgroundColor: '#FAFAFA' }}
+                    />
+                    <TextInput
+                      placeholder="Notes (optional)"
+                      placeholderTextColor="#999"
+                      value={newRiderNotes}
+                      onChangeText={setNewRiderNotes}
+                      style={{ borderWidth: 1, borderColor: '#E0E0E0', borderRadius: 6, padding: 10, fontSize: 14, color: '#1B1C1C', backgroundColor: '#FAFAFA' }}
+                    />
+                    <Pressable
+                      onPress={addRider}
+                      disabled={addRiderLoading}
+                      style={{ backgroundColor: addRiderLoading ? '#ccc' : '#25D366', padding: 13, borderRadius: 6, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
+                    >
+                      <FontAwesome name="user-plus" size={14} color="#fff" />
+                      <Text style={{ color: '#fff', fontWeight: '700', fontSize: 13 }}>
+                        {addRiderLoading ? 'Saving...' : 'Save Rider'}
+                      </Text>
+                    </Pressable>
+                  </View>
+                )}
+
+                {ridersLoading ? (
+                  <ActivityIndicator size="large" color="#4A0404" style={{ marginVertical: 40 }} />
+                ) : riders.length === 0 ? (
+                  <View style={[styles.adminNewOrderCard, { flexDirection: 'column', alignItems: 'center', paddingVertical: 48, gap: 12 }]}>
+                    <FontAwesome name="motorcycle" size={48} color="#E0E0E0" />
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: '#1B1C1C' }}>No Riders Yet</Text>
+                    <Text style={{ fontSize: 13, color: '#888', textAlign: 'center' }}>
+                      Tap "Add Rider" above to add your first delivery rider.
+                    </Text>
+                    <Pressable onPress={fetchRiders} style={{ backgroundColor: '#F3F4F6', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 6 }}>
+                      <Text style={{ fontSize: 12, fontWeight: '700', color: '#4A0404' }}>↺ Refresh</Text>
+                    </Pressable>
+                  </View>
+                ) : (
+                  <View style={{ gap: 12 }}>
+                    {riders.map((rider) => (
+                      <View key={rider.id} style={[styles.adminNewOrderCard, { flexDirection: 'row', alignItems: 'center', borderLeftWidth: 4, borderLeftColor: rider.is_active ? '#25D366' : '#D1D5DB', gap: 14 }]}>
+                        <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: rider.is_active ? '#25D366' : '#D1D5DB', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <Text style={{ color: '#fff', fontWeight: '700', fontSize: 20 }}>{rider.name.charAt(0).toUpperCase()}</Text>
                         </View>
-                        <Text style={{fontSize: 13, color: '#5F5E5F', marginTop: 3}}>{rider.phone}</Text>
-                        {rider.notes ? <Text style={{fontSize: 11, color: '#9CA3AF', marginTop: 2}}>{rider.notes}</Text> : null}
+                        <View style={{ flex: 1 }}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                            <Text style={{ fontSize: 15, fontWeight: '700', color: '#1B1C1C' }}>{rider.name}</Text>
+                            <View style={{ backgroundColor: rider.is_active ? '#ECFDF5' : '#F3F4F6', paddingHorizontal: 7, paddingVertical: 3, borderRadius: 4 }}>
+                              <Text style={{ fontSize: 9, fontWeight: '700', color: rider.is_active ? '#10B981' : '#9CA3AF', letterSpacing: 0.8 }}>
+                                {rider.is_active ? 'ACTIVE' : 'INACTIVE'}
+                              </Text>
+                            </View>
+                          </View>
+                          <Text style={{ fontSize: 13, color: '#5F5E5F', marginTop: 3 }}>{rider.phone}</Text>
+                          {rider.notes ? <Text style={{ fontSize: 11, color: '#9CA3AF', marginTop: 2 }}>{rider.notes}</Text> : null}
+                        </View>
+                        <View style={{ flexDirection: 'row', gap: 8 }}>
+                          <Pressable onPress={() => { let w = rider.phone.replace(/[^0-9]/g, ''); if (w.startsWith('0')) w = '233' + w.substring(1); Linking.openURL(`https://wa.me/${w}`); }} style={{ padding: 10, backgroundColor: '#25D366', borderRadius: 8 }}>
+                            <FontAwesome name="whatsapp" size={18} color="#fff" />
+                          </Pressable>
+                          <Pressable onPress={() => toggleRiderActive(rider.id, rider.is_active)} style={{ padding: 10, borderRadius: 8, backgroundColor: rider.is_active ? '#FEF9C3' : '#ECFDF5' }}>
+                            <FontAwesome name={rider.is_active ? 'pause-circle' : 'play-circle'} size={18} color={rider.is_active ? '#D97706' : '#10B981'} />
+                          </Pressable>
+                          <Pressable onPress={() => { if (typeof window !== 'undefined') { if (window.confirm(`Remove ${rider.name}?`)) deleteRider(rider.id); } else deleteRider(rider.id); }} style={{ padding: 10, backgroundColor: '#FEF2F2', borderRadius: 8 }}>
+                            <FontAwesome name="trash-o" size={18} color="#EF4444" />
+                          </Pressable>
+                        </View>
                       </View>
-                      <View style={{flexDirection: 'row', gap: 8}}>
-                        <Pressable onPress={() => { let w = rider.phone.replace(/[^0-9]/g,''); if(w.startsWith('0')) w='233'+w.substring(1); Linking.openURL(`https://wa.me/${w}`); }} style={{padding: 10, backgroundColor: '#25D366', borderRadius: 8}}>
-                          <FontAwesome name="whatsapp" size={18} color="#fff" />
-                        </Pressable>
-                        <Pressable onPress={() => toggleRiderActive(rider.id, rider.is_active)} style={{padding: 10, borderRadius: 8, backgroundColor: rider.is_active ? '#FEF9C3' : '#ECFDF5'}}>
-                          <FontAwesome name={rider.is_active ? 'pause-circle' : 'play-circle'} size={18} color={rider.is_active ? '#D97706' : '#10B981'} />
-                        </Pressable>
-                        <Pressable onPress={() => { if(typeof window!=='undefined'){if(window.confirm(`Remove ${rider.name}?`))deleteRider(rider.id);}else deleteRider(rider.id); }} style={{padding: 10, backgroundColor: '#FEF2F2', borderRadius: 8}}>
-                          <FontAwesome name="trash-o" size={18} color="#EF4444" />
-                        </Pressable>
-                      </View>
-                    </View>
-                  ))}
-                </View>
-              )}
-            </View>
+                    ))}
+                  </View>
+                )}
+              </View>
             )}
 
             {/* SETTINGS TAB */}
             {activeAdminTab === 'Settings' && (
-            <View style={styles.adminDashboardSection}>
-              <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Store Settings</Text>
+              <View style={styles.adminDashboardSection}>
+                <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Store Settings</Text>
 
-              {/* Dark Mode Toggle */}
-              <View style={[styles.adminNewOrderCard, {flexDirection: 'column', gap: 16}]}>
-                <Text style={{fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5}}>APPEARANCE</Text>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <View>
-                    <Text style={{fontSize: 14, fontWeight: '600', color: '#1B1C1C'}}>Admin Dark Mode</Text>
-                    <Text style={{fontSize: 12, color: '#5F5E5F', marginTop: 2}}>Toggle dark theme for the admin dashboard</Text>
+                {/* Dark Mode Toggle */}
+                <View style={[styles.adminNewOrderCard, { flexDirection: 'column', gap: 16 }]}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5 }}>APPEARANCE</Text>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <View>
+                      <Text style={{ fontSize: 14, fontWeight: '600', color: '#1B1C1C' }}>Admin Dark Mode</Text>
+                      <Text style={{ fontSize: 12, color: '#5F5E5F', marginTop: 2 }}>Toggle dark theme for the admin dashboard</Text>
+                    </View>
+                    <Pressable
+                      onPress={() => setIsAdminDarkMode(prev => !prev)}
+                      style={{
+                        width: 50, height: 28, borderRadius: 14,
+                        backgroundColor: isAdminDarkMode ? '#4A0404' : '#E5E7EB',
+                        justifyContent: 'center',
+                        paddingHorizontal: 3,
+                      }}
+                    >
+                      <View style={{
+                        width: 22, height: 22, borderRadius: 11,
+                        backgroundColor: '#fff',
+                        marginLeft: isAdminDarkMode ? 22 : 0,
+                      }} />
+                    </Pressable>
                   </View>
+                </View>
+
+                {/* Currency Settings */}
+                <View style={[styles.adminNewOrderCard, { flexDirection: 'column', gap: 16, marginTop: 16 }]}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5 }}>CURRENCY</Text>
+                  <Text style={{ fontSize: 12, color: '#5F5E5F' }}>Select the default currency for the storefront.</Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                    {currencyOptions.map((option) => {
+                      const active = option === currency;
+                      return (
+                        <Pressable
+                          key={option}
+                          onPress={() => setCurrency(option)}
+                          style={[styles.adminCurrencyToggle, active && styles.adminCurrencyToggleActive]}
+                        >
+                          <Text style={[styles.adminCurrencyToggleText, active && styles.adminCurrencyToggleTextActive]}>{option}</Text>
+                        </Pressable>
+                      );
+                    })}
+                  </View>
+                </View>
+
+                {/* Logout */}
+                <View style={[styles.adminNewOrderCard, { flexDirection: 'column', gap: 12, marginTop: 16 }]}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5 }}>ACCOUNT</Text>
                   <Pressable
-                    onPress={() => setIsAdminDarkMode(prev => !prev)}
-                    style={{
-                      width: 50, height: 28, borderRadius: 14,
-                      backgroundColor: isAdminDarkMode ? '#4A0404' : '#E5E7EB',
-                      justifyContent: 'center',
-                      paddingHorizontal: 3,
-                    }}
+                    onPress={() => { setAdminUnlocked(false); setCurrentPage('shop'); }}
+                    style={{ backgroundColor: '#4A0404', padding: 14, alignItems: 'center' }}
                   >
-                    <View style={{
-                      width: 22, height: 22, borderRadius: 11,
-                      backgroundColor: '#fff',
-                      marginLeft: isAdminDarkMode ? 22 : 0,
-                    }} />
+                    <Text style={{ color: '#fff', fontWeight: '700', letterSpacing: 1, fontSize: 13 }}>LOGOUT OF ADMIN</Text>
                   </Pressable>
                 </View>
               </View>
-
-              {/* Currency Settings */}
-              <View style={[styles.adminNewOrderCard, {flexDirection: 'column', gap: 16, marginTop: 16}]}>
-                <Text style={{fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5}}>CURRENCY</Text>
-                <Text style={{fontSize: 12, color: '#5F5E5F'}}>Select the default currency for the storefront.</Text>
-                <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 8}}>
-                  {currencyOptions.map((option) => {
-                    const active = option === currency;
-                    return (
-                      <Pressable
-                        key={option}
-                        onPress={() => setCurrency(option)}
-                        style={[styles.adminCurrencyToggle, active && styles.adminCurrencyToggleActive]}
-                      >
-                        <Text style={[styles.adminCurrencyToggleText, active && styles.adminCurrencyToggleTextActive]}>{option}</Text>
-                      </Pressable>
-                    );
-                  })}
-                </View>
-              </View>
-
-              {/* Logout */}
-              <View style={[styles.adminNewOrderCard, {flexDirection: 'column', gap: 12, marginTop: 16}]}>
-                <Text style={{fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5}}>ACCOUNT</Text>
-                <Pressable
-                  onPress={() => { setAdminUnlocked(false); setCurrentPage('shop'); }}
-                  style={{backgroundColor: '#4A0404', padding: 14, alignItems: 'center'}}
-                >
-                  <Text style={{color: '#fff', fontWeight: '700', letterSpacing: 1, fontSize: 13}}>LOGOUT OF ADMIN</Text>
-                </Pressable>
-              </View>
-            </View>
             )}
 
             {/* PRICE UPDATE TAB */}
             {activeAdminTab === 'Price Update' && (
-            <View style={styles.adminDashboardSection}>
-              <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Bulk Price Update</Text>
-              <View style={[styles.adminNewOrderCard, {flexDirection: 'column', gap: 12}]}>
-                <Text style={{fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5}}>PRODUCT PRICES</Text>
-                <Text style={{fontSize: 12, color: '#5F5E5F', lineHeight: 18}}>To update individual product prices, go to the Inventory tab and tap the ✎ edit icon next to any product.</Text>
-                <Pressable
-                  onPress={() => setActiveAdminTab('Inventory')}
-                  style={{backgroundColor: '#4A0404', padding: 14, alignItems: 'center', marginTop: 8}}
-                >
-                  <Text style={{color: '#fff', fontWeight: '700', letterSpacing: 1, fontSize: 13}}>GO TO INVENTORY</Text>
-                </Pressable>
-              </View>
+              <View style={styles.adminDashboardSection}>
+                <Text style={[styles.adminMainSubtitle, { color: adm.text }]}>Bulk Price Update</Text>
+                <View style={[styles.adminNewOrderCard, { flexDirection: 'column', gap: 12 }]}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5 }}>PRODUCT PRICES</Text>
+                  <Text style={{ fontSize: 12, color: '#5F5E5F', lineHeight: 18 }}>To update individual product prices, go to the Inventory tab and tap the ✎ edit icon next to any product.</Text>
+                  <Pressable
+                    onPress={() => setActiveAdminTab('Inventory')}
+                    style={{ backgroundColor: '#4A0404', padding: 14, alignItems: 'center', marginTop: 8 }}
+                  >
+                    <Text style={{ color: '#fff', fontWeight: '700', letterSpacing: 1, fontSize: 13 }}>GO TO INVENTORY</Text>
+                  </Pressable>
+                </View>
 
-              <View style={[styles.adminNewOrderCard, {flexDirection: 'column', gap: 12, marginTop: 16}]}>
-                <Text style={{fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5}}>CURRENCY RATES</Text>
-                <Text style={{fontSize: 12, color: '#5F5E5F', lineHeight: 18}}>Currency rates are fetched live from the open exchange rates API on app start. Switch currency display below:</Text>
-                <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4}}>
-                  {currencyOptions.map((option) => {
-                    const active = option === currency;
-                    return (
-                      <Pressable
-                        key={option}
-                        onPress={() => setCurrency(option)}
-                        style={[styles.adminCurrencyToggle, active && styles.adminCurrencyToggleActive]}
-                      >
-                        <Text style={[styles.adminCurrencyToggleText, active && styles.adminCurrencyToggleTextActive]}>{option}</Text>
-                      </Pressable>
-                    );
-                  })}
+                <View style={[styles.adminNewOrderCard, { flexDirection: 'column', gap: 12, marginTop: 16 }]}>
+                  <Text style={{ fontSize: 13, fontWeight: '700', color: '#1B1C1C', letterSpacing: 0.5 }}>CURRENCY RATES</Text>
+                  <Text style={{ fontSize: 12, color: '#5F5E5F', lineHeight: 18 }}>Currency rates are fetched live from the open exchange rates API on app start. Switch currency display below:</Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
+                    {currencyOptions.map((option) => {
+                      const active = option === currency;
+                      return (
+                        <Pressable
+                          key={option}
+                          onPress={() => setCurrency(option)}
+                          style={[styles.adminCurrencyToggle, active && styles.adminCurrencyToggleActive]}
+                        >
+                          <Text style={[styles.adminCurrencyToggleText, active && styles.adminCurrencyToggleTextActive]}>{option}</Text>
+                        </Pressable>
+                      );
+                    })}
+                  </View>
                 </View>
               </View>
-            </View>
             )}
 
-          <View style={{height: 80}} />
+            <View style={{ height: 80 }} />
           </ScrollView>
 
           {/* MOBILE NAVIGATION DRAWER */}
@@ -3153,17 +3156,6 @@ const fetchFooterData = async () => {
                       onPress={() => {
                         if (!customerMsgModal || !customMsgText.trim()) return;
                         let phone = customerMsgModal.phone.replace(/[^0-9]/g, '');
-                        if (phone.startsWith('0')) phone = '233' + phone.substring(1);
-                        const link = `https://wa.me/${phone}?text=${encodeURIComponent(customMsgText.trim())}`;
-                        if (typeof window !== 'undefined') window.open(link, '_blank');
-                        else Linking.openURL(link);
-                        setCustomerMsgModal(null);
-                        setCustomMsgText('');
-                      }}
-                      disabled={!customMsgText.trim()}
-                      style={{ backgroundColor: !customMsgText.trim() ? '#D1D5DB' : '#25D366', borderRadius: 8, padding: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}
-                    >
-                      <FontAwesome name="whatsapp" size={18} color="#fff" />
                       <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>Send via WhatsApp</Text>
                     </Pressable>
                   </View>
@@ -3177,222 +3169,220 @@ const fetchFooterData = async () => {
       ) : (
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.hero}>
-          {/* LAYER 1 (bottom): Blurred backdrop - same image/video stretched + blurred */}
-          {!heroLoading && heroMedia.length > 0 && (() => {
-            const item = heroMedia[currentHeroSlide];
-            const isVideo = item?.type?.toLowerCase() === 'video' || /\.(mp4|webm|mov|ogg)$/i.test(item?.uri || '');
-            if (isVideo && Platform.OS === 'web') {
-              return React.createElement('div', {
-                style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', zIndex: 0 }
-              },
-                React.createElement('video', {
-                  src: item?.uri, autoPlay: true, loop: true, muted: true, playsInline: true,
-                  style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(24px)', transform: 'scale(1.15)', opacity: 0.85 }
-                }),
-                React.createElement('div', { style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.2)' } })
-              );
-            } else if (!isVideo) {
-              return (
-                <ImageBackground
-                  source={{ uri: item?.uri }}
-                  style={{ ...StyleSheet.absoluteFillObject, zIndex: 0 }}
-                  blurRadius={50}
-                  resizeMode="cover"
-                >
-                  <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-                </ImageBackground>
-              );
-            }
-            return null;
-          })()}
-
-          {/* LAYER 2: Sharp foreground image/video (zIndex: 1, contain mode) */}
-          {heroLoading ? (
-            <View style={{ ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f0f0', zIndex: 1 }}>
-              <ActivityIndicator size="large" color={palette.oxblood} />
-            </View>
-          ) : heroMedia.length > 0 ? (
-            (() => {
+            {/* LAYER 1 (bottom): Blurred backdrop - CSS blur for web, blurRadius for native */}
+            {!heroLoading && heroMedia.length > 0 && (() => {
               const item = heroMedia[currentHeroSlide];
               const isVideo = item?.type?.toLowerCase() === 'video' || /\.(mp4|webm|mov|ogg)$/i.test(item?.uri || '');
-              if (isVideo) {
-                return Platform.OS === 'web' ? (
+              if (isVideo && Platform.OS === 'web') {
+                return React.createElement('div', {
+                  style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', zIndex: 0 }
+                },
                   React.createElement('video', {
-                    key: item?.uri,
-                    autoPlay: true, loop: true, muted: true, playsInline: true,
-                    src: item?.uri,
-                    style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', zIndex: 1 }
-                  })
-                ) : (
-                  <Video
-                    source={{ uri: item?.uri }}
-                    style={[styles.heroImage, { zIndex: 1 }]}
-                    useNativeControls={false}
-                    resizeMode={ResizeMode.CONTAIN}
-                    isLooping shouldPlay isMuted
-                  />
+                    src: item?.uri, autoPlay: true, loop: true, muted: true, playsInline: true,
+                    style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(22px)', transform: 'scale(1.12)', opacity: 0.85 }
+                  }),
+                  React.createElement('div', { style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.18)' } })
                 );
-              } else {
-                return (
-                  <Image
+              } else if (!isVideo) {
+                return Platform.OS === 'web' ? (
+                  <View style={{ ...StyleSheet.absoluteFillObject, overflow: 'hidden', zIndex: 0 }}>
+                    <Image
+                      source={{ uri: item?.uri }}
+                      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%', filter: 'blur(22px)', transform: [{ scale: 1.12 }] }}
+                      resizeMode="cover"
+                    />
+                    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.18)' }} />
+                  </View>
+                ) : (
+                  <ImageBackground
                     source={{ uri: item?.uri }}
-                    style={[styles.heroImage, { zIndex: 1 }]}
-                    resizeMode="contain"
-                  />
+                    style={{ ...StyleSheet.absoluteFillObject, zIndex: 0 }}
+                    blurRadius={50}
+                    resizeMode="cover"
+                  >
+                    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.18)' }} />
+                  </ImageBackground>
                 );
               }
-            })()
-          ) : null}
+              return null;
+            })()}
 
-          {/* LAYER 3: Supabase text + overlay (zIndex: 2) */}
-          <View style={styles.heroOverlay} />
-          <Animated.View style={[styles.heroTextWrap, { opacity: reveal, transform: [{ translateY: lift }], zIndex: 2 }]}>
-            {!!heroMedia[currentHeroSlide]?.kicker && (
-              <Text style={styles.kicker}>{heroMedia[currentHeroSlide].kicker}</Text>
-            )}
-            {!!heroMedia[currentHeroSlide]?.hero_title && (
-              <Text style={styles.heroTitle}>{heroMedia[currentHeroSlide].hero_title}</Text>
-            )}
-            {!!heroMedia[currentHeroSlide]?.hero_body && (
-              <Text style={styles.heroBody}>{heroMedia[currentHeroSlide].hero_body}</Text>
-            )}
-            {!!heroMedia[currentHeroSlide]?.button_text_primary && (
-              <View style={styles.heroActionsRow}>
-                <Pressable style={styles.heroBtn} onPress={() => setCurrentPage('shop')}>
-                  <Text style={styles.heroBtnText}>{heroMedia[currentHeroSlide].button_text_primary}</Text>
-                </Pressable>
+            {/* LAYER 2: Sharp foreground image/video (zIndex: 1) */}
+            {heroLoading ? (
+              <View style={{ ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f0f0', zIndex: 1 }}>
+                <ActivityIndicator size="large" color={palette.oxblood} />
               </View>
-            )}
-          </Animated.View>
+            ) : heroMedia.length > 0 ? (
+              (() => {
+                const item = heroMedia[currentHeroSlide];
+                const isVideo = item?.type?.toLowerCase() === 'video' || /\.(mp4|webm|mov|ogg)$/i.test(item?.uri || '');
+                if (isVideo) {
+                  return Platform.OS === 'web' ? (
+                    React.createElement('video', {
+                      key: item?.uri, autoPlay: true, loop: true, muted: true, playsInline: true, src: item?.uri,
+                      style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', zIndex: 1 }
+                    })
+                  ) : (
+                    <Video source={{ uri: item?.uri }} style={[styles.heroImage, { zIndex: 1 }]}
+                      useNativeControls={false} resizeMode={ResizeMode.CONTAIN} isLooping shouldPlay isMuted />
+                  );
+                } else {
+                  return <Image source={{ uri: item?.uri }} style={[styles.heroImage, { zIndex: 1 }]} resizeMode="contain" />;
+                }
+              })()
+            ) : null}
 
-          {/* LAYER 4 (top): Slide dots */}
-          <View style={{ position: 'absolute', bottom: 16, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 8, zIndex: 3 }}>
-            {heroMedia.map((_, i) => (
-              <View key={i} style={{ width: i === currentHeroSlide ? 24 : 8, height: 8, borderRadius: 4, backgroundColor: i === currentHeroSlide ? '#fff' : 'rgba(255,255,255,0.4)' }} />
-            ))}
-          </View>
-        </View>
+            {/* Dark overlay for text readability */}
+            <View style={styles.heroOverlay} />
 
+            {/* Supabase text content */}
+            <Animated.View style={[styles.heroTextWrap, { opacity: reveal, transform: [{ translateY: lift }] }]}>
+              {!!heroMedia[currentHeroSlide]?.kicker && (
+                <Text style={styles.kicker}>{heroMedia[currentHeroSlide].kicker}</Text>
+              )}
+              {!!heroMedia[currentHeroSlide]?.hero_title && (
+                <Text style={styles.heroTitle}>{heroMedia[currentHeroSlide].hero_title}</Text>
+              )}
+              {!!heroMedia[currentHeroSlide]?.hero_body && (
+                <Text style={styles.heroBody}>{heroMedia[currentHeroSlide].hero_body}</Text>
+              )}
+              {!!heroMedia[currentHeroSlide]?.button_text_primary && (
+                <View style={styles.heroActionsRow}>
+                  <Pressable style={styles.heroBtn} onPress={() => setCurrentPage('shop')}>
+                    <Text style={styles.heroBtnText}>{heroMedia[currentHeroSlide].button_text_primary}</Text>
+                  </Pressable>
+                </View>
+              )}
+            </Animated.View>
 
-        <CarouselComponent
-          onProductPress={(productId) => {
-            // Scroll to the product by clearing category filter so it's visible
-            setActiveCategory('All');
-            // Small timeout to let render settle then scroll/highlight
-            setTimeout(() => {
-              const target = productCards.find(p => p.id === productId);
-              if (target) setActiveCategory(target.categoryLabel || 'All');
-            }, 100);
-          }}
-        />
-
-        {(() => {
-          const chips = categoryChips.map((cat) => {
-            const active = cat === activeCategory;
-            return (
-              <Pressable
-                key={cat}
-                onPress={() => setActiveCategory(cat)}
-                style={[
-                  styles.chipGridItem, 
-                  active && styles.chipActive,
-                  isMobileOrTablet && { paddingHorizontal: 12, paddingVertical: 6, minHeight: 30 },
-                  !active && { 
-                    borderColor: isUserDarkMode ? '#444' : '#E0E0E0',
-                    backgroundColor: isUserDarkMode ? darkPalette.surface : '#FFFFFF'
-                  }
-                ]}
-              >
-                <Text style={[
-                  styles.chipText, 
-                  active && styles.chipTextActive,
-                  isMobileOrTablet && { fontSize: 11 },
-                  !active && { color: isUserDarkMode ? darkPalette.secondary : palette.secondary }
-                ]}>{cat}</Text>
-              </Pressable>
-            );
-          });
-
-          if (isMobileOrTablet) {
-            return (
-              <View style={[styles.chipsScrollContent, { flexWrap: 'wrap', paddingBottom: 12, marginTop: 8, width: '100%', justifyContent: 'flex-start' }]}>
-                {chips}
-              </View>
-            );
-          }
-
-          return (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.chipsScrollContent}
-              style={styles.chipsScrollView}
-            >
-              {chips}
-            </ScrollView>
-          );
-        })()}
-
-<View style={[styles.searchWrap, { 
-          backgroundColor: isUserDarkMode ? darkPalette.surface : undefined,
-          borderColor: isUserDarkMode ? '#333' : undefined
-        }]}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
-            <TextInput
-              value={search}
-              onChangeText={setSearch}
-              placeholder="Search category"
-              placeholderTextColor={isUserDarkMode ? '#666' : '#89726F'}
-              style={[styles.searchInput, {
-                flex: 1,
-                color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal,
-                backgroundColor: isUserDarkMode ? darkPalette.background : undefined
-              }]}
-            />
-            <Pressable 
-              onPress={refreshProducts}
-              style={{
-                backgroundColor: '#9CA3AF',
-                paddingHorizontal: 12,
-                paddingVertical: 12,
-                borderRadius: 4,
-              }}
-              accessibilityLabel="Refresh products"
-            >
-              <FontAwesome name="refresh" size={16} color="#fff" />
-            </Pressable>
-          </View>
-        </View>
-
-        <View style={[styles.productGrid, { paddingHorizontal: 0, rowGap: 0, columnGap: 0, paddingBottom: 200 }]}>
-          {filteredCategories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              category={category}
-              cardWidth={cardWidth}
-              currency={currency}
-              onAddToCart={addToCart}
-              onRemoveFromCart={removeFromCart}
-              cartItems={cartItems}
-              onViewDetails={(product) => {
-                setSelectedProduct(product);
-                setProductDetailVisible(true);
-              }}
-              isPhone={isCompactCard}
-              isUserDarkMode={isUserDarkMode}
-            />
-          ))}
-          {filteredCategories.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyTitle}>No category found</Text>
-              <Text style={styles.emptyBody}>Try another search term or select a different chip.</Text>
+            {/* Slide indicator dots */}
+            <View style={{ position: 'absolute', bottom: 16, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+              {heroMedia.map((_, i) => (
+                <View key={i} style={{ width: i === currentHeroSlide ? 24 : 8, height: 8, borderRadius: 4, backgroundColor: i === currentHeroSlide ? '#fff' : 'rgba(255,255,255,0.4)', transition: 'all 0.3s ease' }} />
+              ))}
             </View>
-          ) : null}
-        </View>
+          </View>
+
+
+          <CarouselComponent
+            onProductPress={(productId) => {
+              // Scroll to the product by clearing category filter so it's visible
+              setActiveCategory('All');
+              // Small timeout to let render settle then scroll/highlight
+              setTimeout(() => {
+                const target = productCards.find(p => p.id === productId);
+                if (target) setActiveCategory(target.categoryLabel || 'All');
+              }, 100);
+            }}
+          />
+
+          {(() => {
+            const chips = categoryChips.map((cat) => {
+              const active = cat === activeCategory;
+              return (
+                <Pressable
+                  key={cat}
+                  onPress={() => setActiveCategory(cat)}
+                  style={[
+                    styles.chipGridItem,
+                    active && styles.chipActive,
+                    isMobileOrTablet && { paddingHorizontal: 12, paddingVertical: 6, minHeight: 30 },
+                    !active && {
+                      borderColor: isUserDarkMode ? '#444' : '#E0E0E0',
+                      backgroundColor: isUserDarkMode ? darkPalette.surface : '#FFFFFF'
+                    }
+                  ]}
+                >
+                  <Text style={[
+                    styles.chipText,
+                    active && styles.chipTextActive,
+                    isMobileOrTablet && { fontSize: 11 },
+                    !active && { color: isUserDarkMode ? darkPalette.secondary : palette.secondary }
+                  ]}>{cat}</Text>
+                </Pressable>
+              );
+            });
+
+            if (isMobileOrTablet) {
+              return (
+                <View style={[styles.chipsScrollContent, { flexWrap: 'wrap', paddingBottom: 12, marginTop: 8, width: '100%', justifyContent: 'flex-start' }]}>
+                  {chips}
+                </View>
+              );
+            }
+
+            return (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.chipsScrollContent}
+                style={styles.chipsScrollView}
+              >
+                {chips}
+              </ScrollView>
+            );
+          })()}
+
+          <View style={[styles.searchWrap, {
+            backgroundColor: isUserDarkMode ? darkPalette.surface : undefined,
+            borderColor: isUserDarkMode ? '#333' : undefined
+          }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <TextInput
+                value={search}
+                onChangeText={setSearch}
+                placeholder="Search category"
+                placeholderTextColor={isUserDarkMode ? '#666' : '#89726F'}
+                style={[styles.searchInput, {
+                  flex: 1,
+                  color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal,
+                  backgroundColor: isUserDarkMode ? darkPalette.background : undefined
+                }]}
+              />
+              <Pressable
+                onPress={refreshProducts}
+                style={{
+                  backgroundColor: '#9CA3AF',
+                  paddingHorizontal: 12,
+                  paddingVertical: 12,
+                  borderRadius: 4,
+                }}
+                accessibilityLabel="Refresh products"
+              >
+                <FontAwesome name="refresh" size={16} color="#fff" />
+              </Pressable>
+            </View>
+          </View>
+
+          <View style={[styles.productGrid, { paddingHorizontal: 0, rowGap: 0, columnGap: 0, paddingBottom: 200 }]}>
+            {filteredCategories.map((category) => (
+              <CategoryCard
+                key={category.id}
+                category={category}
+                cardWidth={cardWidth}
+                currency={currency}
+                onAddToCart={addToCart}
+                onRemoveFromCart={removeFromCart}
+                cartItems={cartItems}
+                onViewDetails={(product) => {
+                  setSelectedProduct(product);
+                  setProductDetailVisible(true);
+                }}
+                isPhone={isCompactCard}
+                isUserDarkMode={isUserDarkMode}
+              />
+            ))}
+            {filteredCategories.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Text style={styles.emptyTitle}>No category found</Text>
+                <Text style={styles.emptyBody}>Try another search term or select a different chip.</Text>
+              </View>
+            ) : null}
+          </View>
         </ScrollView>
       )}
 
-      <Animated.View 
+      <Animated.View
         style={[
           styles.checkoutBar,
           {
@@ -3462,10 +3452,10 @@ const fetchFooterData = async () => {
       {/* CHECKOUT MODAL */}
       <Modal visible={checkoutModalVisible} animationType="fade" transparent={true} onRequestClose={() => setCheckoutModalVisible(false)}>
         <View style={{ flex: 1, backgroundColor: 'rgba(27,28,28,0.6)', justifyContent: 'center', padding: 16 }}>
-          <View style={{ 
-            backgroundColor: isUserDarkMode ? darkPalette.background : palette.background, 
-            borderWidth: 1, 
-            borderColor: isUserDarkMode ? '#333' : palette.oxblood, 
+          <View style={{
+            backgroundColor: isUserDarkMode ? darkPalette.background : palette.background,
+            borderWidth: 1,
+            borderColor: isUserDarkMode ? '#333' : palette.oxblood,
             padding: 20,
             width: '100%',
             maxWidth: 580,
@@ -3477,34 +3467,34 @@ const fetchFooterData = async () => {
             elevation: 8
           }}>
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 14 }}>
-              <Text style={{ 
-                color: isUserDarkMode ? darkPalette.oxbloodSoft : palette.oxbloodSoft, 
-                fontSize: 11, 
-                letterSpacing: 1.8, 
-                fontWeight: '700' 
+              <Text style={{
+                color: isUserDarkMode ? darkPalette.oxbloodSoft : palette.oxbloodSoft,
+                fontSize: 11,
+                letterSpacing: 1.8,
+                fontWeight: '700'
               }}>DELIVERY DETAILS</Text>
-              <Text style={{ 
-                fontFamily: 'Georgia', 
-                fontSize: 26, 
-                fontWeight: '700', 
-                color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood, 
-                marginTop: 4 
+              <Text style={{
+                fontFamily: 'Georgia',
+                fontSize: 26,
+                fontWeight: '700',
+                color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood,
+                marginTop: 4
               }}>Complete Your Order</Text>
-              <Text style={{ 
-                fontSize: 13, 
-                color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                lineHeight: 18, 
-                marginBottom: 8 
+              <Text style={{
+                fontSize: 13,
+                color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                lineHeight: 18,
+                marginBottom: 8
               }}>
                 Provide your contact details and shipping address to place this order. Payment is cash on delivery.
               </Text>
 
               <View style={{ gap: 4 }}>
-                <Text style={{ 
-                  fontSize: 11, 
-                  fontWeight: '700', 
-                  color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                  letterSpacing: 0.8 
+                <Text style={{
+                  fontSize: 11,
+                  fontWeight: '700',
+                  color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                  letterSpacing: 0.8
                 }}>FULL NAME *</Text>
                 <TextInput
                   value={customerName}
@@ -3520,11 +3510,11 @@ const fetchFooterData = async () => {
               </View>
 
               <View style={{ gap: 4 }}>
-                <Text style={{ 
-                  fontSize: 11, 
-                  fontWeight: '700', 
-                  color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                  letterSpacing: 0.8 
+                <Text style={{
+                  fontSize: 11,
+                  fontWeight: '700',
+                  color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                  letterSpacing: 0.8
                 }}>PHONE NUMBER *</Text>
                 <TextInput
                   value={customerPhone}
@@ -3541,11 +3531,11 @@ const fetchFooterData = async () => {
               </View>
 
               <View style={{ gap: 4 }}>
-                <Text style={{ 
-                  fontSize: 11, 
-                  fontWeight: '700', 
-                  color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                  letterSpacing: 0.8 
+                <Text style={{
+                  fontSize: 11,
+                  fontWeight: '700',
+                  color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                  letterSpacing: 0.8
                 }}>EMAIL ADDRESS</Text>
                 <TextInput
                   value={customerEmail}
@@ -3563,11 +3553,11 @@ const fetchFooterData = async () => {
               </View>
 
               <View style={{ gap: 4 }}>
-                <Text style={{ 
-                  fontSize: 11, 
-                  fontWeight: '700', 
-                  color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                  letterSpacing: 0.8 
+                <Text style={{
+                  fontSize: 11,
+                  fontWeight: '700',
+                  color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                  letterSpacing: 0.8
                 }}>DELIVERY ADDRESS *</Text>
                 <TextInput
                   value={deliveryAddress}
@@ -3576,8 +3566,8 @@ const fetchFooterData = async () => {
                   numberOfLines={3}
                   placeholder="Street name, house number, landmarks..."
                   placeholderTextColor={isUserDarkMode ? '#666' : '#89726F'}
-                  style={[styles.adminLoginInput, { 
-                    height: 80, 
+                  style={[styles.adminLoginInput, {
+                    height: 80,
                     textAlignVertical: 'top',
                     backgroundColor: isUserDarkMode ? darkPalette.surface : '#FAFAFA',
                     color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal,
@@ -3586,41 +3576,41 @@ const fetchFooterData = async () => {
                 />
               </View>
 
-              <View style={{ 
-                borderTopWidth: 1, 
-                borderTopColor: isUserDarkMode ? '#333' : 'rgba(27,28,28,0.1)', 
-                paddingTop: 14, 
-                marginTop: 8, 
-                flexDirection: 'row', 
-                gap: 10 
+              <View style={{
+                borderTopWidth: 1,
+                borderTopColor: isUserDarkMode ? '#333' : 'rgba(27,28,28,0.1)',
+                paddingTop: 14,
+                marginTop: 8,
+                flexDirection: 'row',
+                gap: 10
               }}>
-                <Pressable 
+                <Pressable
                   onPress={() => setCheckoutModalVisible(false)}
-                  style={{ 
-                    flex: 1, 
-                    borderWidth: 1, 
-                    borderColor: isUserDarkMode ? darkPalette.oxblood : palette.oxblood, 
-                    paddingVertical: 12, 
-                    alignItems: 'center', 
-                    backgroundColor: isUserDarkMode ? darkPalette.background : '#fff' 
+                  style={{
+                    flex: 1,
+                    borderWidth: 1,
+                    borderColor: isUserDarkMode ? darkPalette.oxblood : palette.oxblood,
+                    paddingVertical: 12,
+                    alignItems: 'center',
+                    backgroundColor: isUserDarkMode ? darkPalette.background : '#fff'
                   }}
                 >
-                  <Text style={{ 
-                    color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood, 
-                    fontWeight: '700', 
-                    fontSize: 12, 
-                    letterSpacing: 1 
+                  <Text style={{
+                    color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood,
+                    fontWeight: '700',
+                    fontSize: 12,
+                    letterSpacing: 1
                   }}>CANCEL</Text>
                 </Pressable>
-                
-                <Pressable 
+
+                <Pressable
                   onPress={submitOrder}
                   disabled={isSubmittingOrder}
-                  style={{ 
-                    flex: 1, 
-                    backgroundColor: isUserDarkMode ? darkPalette.oxblood : palette.oxblood, 
-                    paddingVertical: 12, 
-                    alignItems: 'center' 
+                  style={{
+                    flex: 1,
+                    backgroundColor: isUserDarkMode ? darkPalette.oxblood : palette.oxblood,
+                    paddingVertical: 12,
+                    alignItems: 'center'
                   }}
                 >
                   {isSubmittingOrder ? (
@@ -3774,7 +3764,7 @@ const fetchFooterData = async () => {
             <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, textAlign: 'center', lineHeight: 20, marginBottom: 18 }}>
               Your order has been recorded. Our butcher is preparing your cuts. You will receive a call shortly at the provided number to confirm delivery.
             </Text>
-            
+
             <View style={{ backgroundColor: 'rgba(255,255,255,0.06)', width: '100%', padding: 12, marginBottom: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' }}>
               <Text style={{ fontSize: 10, fontWeight: '700', color: '#888989', letterSpacing: 1 }}>ORDER REFERENCE</Text>
               <Text style={{ color: '#fff', fontSize: 14, fontWeight: 'bold', fontFamily: 'Georgia', marginTop: 4 }}>
@@ -3782,7 +3772,7 @@ const fetchFooterData = async () => {
               </Text>
             </View>
 
-            <Pressable 
+            <Pressable
               onPress={() => {
                 setOrderSuccessModalVisible(false);
                 setCurrentPage('shop');
@@ -3798,10 +3788,10 @@ const fetchFooterData = async () => {
       {/* ADMIN PROFILE MODAL */}
       <Modal visible={adminProfileModalVisible} animationType="fade" transparent={true} onRequestClose={() => setAdminProfileModalVisible(false)}>
         <View style={{ flex: 1, backgroundColor: 'rgba(27,28,28,0.6)', justifyContent: 'center', padding: 16 }}>
-          <View style={{ 
-            backgroundColor: palette.background, 
-            borderWidth: 1, 
-            borderColor: palette.oxblood, 
+          <View style={{
+            backgroundColor: palette.background,
+            borderWidth: 1,
+            borderColor: palette.oxblood,
             padding: 20,
             width: '100%',
             maxWidth: 580,
@@ -3813,7 +3803,7 @@ const fetchFooterData = async () => {
             elevation: 8
           }}>
             <Text style={{ fontFamily: 'Georgia', fontSize: 20, fontWeight: '700', color: palette.oxblood, marginBottom: 14 }}>Update Profile Photo</Text>
-            
+
             <View style={{ gap: 4 }}>
               <Text style={{ fontSize: 11, fontWeight: '700', color: palette.secondary, letterSpacing: 0.8 }}>IMAGE URL</Text>
               <TextInput
@@ -3826,14 +3816,14 @@ const fetchFooterData = async () => {
             </View>
 
             <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(27,28,28,0.1)', paddingTop: 14, marginTop: 14, flexDirection: 'row', gap: 10 }}>
-              <Pressable 
+              <Pressable
                 onPress={() => setAdminProfileModalVisible(false)}
                 style={{ flex: 1, borderWidth: 1, borderColor: palette.oxblood, paddingVertical: 12, alignItems: 'center', backgroundColor: '#fff' }}
               >
                 <Text style={{ color: palette.oxblood, fontWeight: '700', fontSize: 12, letterSpacing: 1 }}>CANCEL</Text>
               </Pressable>
-              
-              <Pressable 
+
+              <Pressable
                 onPress={() => {
                   setAdminAvatarUrl(tempAvatarUrl);
                   setAdminProfileModalVisible(false);
@@ -3850,10 +3840,10 @@ const fetchFooterData = async () => {
       {/* ADMIN ADD PRODUCT MODAL */}
       <Modal visible={addProductModalVisible} animationType="fade" transparent={true} onRequestClose={() => setAddProductModalVisible(false)}>
         <View style={{ flex: 1, backgroundColor: 'rgba(27,28,28,0.6)', justifyContent: 'center', padding: 16 }}>
-          <View style={{ 
-            backgroundColor: palette.background, 
-            borderWidth: 1, 
-            borderColor: palette.oxblood, 
+          <View style={{
+            backgroundColor: palette.background,
+            borderWidth: 1,
+            borderColor: palette.oxblood,
             padding: 20,
             width: '100%',
             maxWidth: 580,
@@ -3867,7 +3857,7 @@ const fetchFooterData = async () => {
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 14 }}>
               <Text style={{ color: palette.oxbloodSoft, fontSize: 11, letterSpacing: 1.8, fontWeight: '700' }}>CATALOG MANAGER</Text>
               <Text style={{ fontFamily: 'Georgia', fontSize: 26, fontWeight: '700', color: palette.oxblood, marginTop: 4 }}>Add New Product</Text>
-              
+
               <View style={{ gap: 4 }}>
                 <Text style={{ fontSize: 11, fontWeight: '700', color: palette.secondary, letterSpacing: 0.8 }}>PRODUCT NAME *</Text>
                 <TextInput
@@ -4022,14 +4012,14 @@ const fetchFooterData = async () => {
               </View>
 
               <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(27,28,28,0.1)', paddingTop: 14, marginTop: 8, flexDirection: 'row', gap: 10 }}>
-                <Pressable 
+                <Pressable
                   onPress={() => setAddProductModalVisible(false)}
                   style={{ flex: 1, borderWidth: 1, borderColor: palette.oxblood, paddingVertical: 12, alignItems: 'center', backgroundColor: '#fff' }}
                 >
                   <Text style={{ color: palette.oxblood, fontWeight: '700', fontSize: 12, letterSpacing: 1 }}>CANCEL</Text>
                 </Pressable>
-                
-                <Pressable 
+
+                <Pressable
                   onPress={adminAddProduct}
                   style={{ flex: 1, backgroundColor: palette.oxblood, paddingVertical: 12, alignItems: 'center' }}
                 >
@@ -4045,10 +4035,10 @@ const fetchFooterData = async () => {
       <Modal visible={editProductModalVisible} animationType="fade" transparent={true} onRequestClose={() => setEditProductModalVisible(false)}>
         <View style={{ flex: 1, backgroundColor: 'rgba(27,28,28,0.6)', justifyContent: 'center', padding: 16 }}>
           {editingProduct && (
-            <View style={{ 
-              backgroundColor: palette.background, 
-              borderWidth: 1, 
-              borderColor: palette.oxblood, 
+            <View style={{
+              backgroundColor: palette.background,
+              borderWidth: 1,
+              borderColor: palette.oxblood,
               padding: 20,
               width: '100%',
               maxWidth: 580,
@@ -4062,7 +4052,7 @@ const fetchFooterData = async () => {
               <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 14 }}>
                 <Text style={{ color: palette.oxbloodSoft, fontSize: 11, letterSpacing: 1.8, fontWeight: '700' }}>CATALOG MANAGER</Text>
                 <Text style={{ fontFamily: 'Georgia', fontSize: 26, fontWeight: '700', color: palette.oxblood, marginTop: 4 }}>Edit Product</Text>
-                
+
                 <View style={{ gap: 4 }}>
                   <Text style={{ fontSize: 11, fontWeight: '700', color: palette.secondary, letterSpacing: 0.8 }}>PRODUCT NAME *</Text>
                   <TextInput
@@ -4217,7 +4207,7 @@ const fetchFooterData = async () => {
                 </View>
 
                 <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(27,28,28,0.1)', paddingTop: 14, marginTop: 8, flexDirection: 'row', gap: 10 }}>
-                  <Pressable 
+                  <Pressable
                     onPress={() => {
                       setEditProductModalVisible(false);
                       setEditingProduct(null);
@@ -4226,8 +4216,8 @@ const fetchFooterData = async () => {
                   >
                     <Text style={{ color: palette.oxblood, fontWeight: '700', fontSize: 12, letterSpacing: 1 }}>CANCEL</Text>
                   </Pressable>
-                  
-                  <Pressable 
+
+                  <Pressable
                     onPress={adminEditProduct}
                     style={{ flex: 1, backgroundColor: palette.oxblood, paddingVertical: 12, alignItems: 'center' }}
                   >
@@ -4388,7 +4378,7 @@ const fetchFooterData = async () => {
                   <FontAwesome name="apple" size={16} color="#000" />
                   <Text style={{ fontWeight: '600', fontSize: 13, color: '#000' }}>Apple</Text>
                 </Pressable>
-                
+
                 <Pressable
                   onPress={() => alert('Social Sign In with Google coming soon')}
                   style={{
@@ -4428,41 +4418,41 @@ const fetchFooterData = async () => {
 
       {/* USER ACCOUNT BOTTOM SHEET */}
       <Modal visible={userAccountSheetVisible} animationType="slide" transparent={true} onRequestClose={() => setUserAccountSheetVisible(false)}>
-        <Pressable 
+        <Pressable
           style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}
           onPress={() => setUserAccountSheetVisible(false)}
         >
-          <Pressable 
-            style={{ 
-              backgroundColor: isUserDarkMode ? darkPalette.background : '#FFF', 
-              borderTopLeftRadius: 20, 
+          <Pressable
+            style={{
+              backgroundColor: isUserDarkMode ? darkPalette.background : '#FFF',
+              borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
               paddingBottom: 40,
               maxHeight: '80%'
             }}
             onPress={(e) => e.stopPropagation()}
           >
-            <View style={{ 
-              padding: 20, 
-              borderBottomWidth: 1, 
-              borderBottomColor: isUserDarkMode ? '#333' : '#E0E0E0' 
+            <View style={{
+              padding: 20,
+              borderBottomWidth: 1,
+              borderBottomColor: isUserDarkMode ? '#333' : '#E0E0E0'
             }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ 
-                    fontSize: 22, 
-                    fontWeight: '700', 
-                    color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood 
+                  <Text style={{
+                    fontSize: 22,
+                    fontWeight: '700',
+                    color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood
                   }}>My Account</Text>
-                  <Text style={{ 
-                    fontSize: 14, 
-                    color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                    marginTop: 4 
+                  <Text style={{
+                    fontSize: 14,
+                    color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                    marginTop: 4
                   }}>
                     {user?.user_metadata?.full_name || user?.email || 'Guest'}
                   </Text>
                 </View>
-                
+
                 {/* Dark Mode Toggle */}
                 <Pressable
                   onPress={() => setIsUserDarkMode(!isUserDarkMode)}
@@ -4479,10 +4469,10 @@ const fetchFooterData = async () => {
                     marginRight: 12,
                   }}
                 >
-                  <FontAwesome5 
-                    name={isUserDarkMode ? 'sun' : 'moon'} 
-                    size={14} 
-                    color={isUserDarkMode ? '#FDB813' : '#4A0404'} 
+                  <FontAwesome5
+                    name={isUserDarkMode ? 'sun' : 'moon'}
+                    size={14}
+                    color={isUserDarkMode ? '#FDB813' : '#4A0404'}
                   />
                   <Text style={{
                     fontSize: 11,
@@ -4492,7 +4482,7 @@ const fetchFooterData = async () => {
                     {isUserDarkMode ? 'Light' : 'Dark'}
                   </Text>
                 </Pressable>
-                
+
                 <Pressable onPress={() => setUserAccountSheetVisible(false)}>
                   <FontAwesome name="times" size={24} color={isUserDarkMode ? '#B0B0B0' : '#888'} />
                 </Pressable>
@@ -4501,30 +4491,30 @@ const fetchFooterData = async () => {
 
             <ScrollView style={{ maxHeight: 400 }} showsVerticalScrollIndicator={false}>
               <View style={{ padding: 20 }}>
-                <Text style={{ 
-                  fontSize: 16, 
-                  fontWeight: '700', 
-                  color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood, 
-                  marginBottom: 12 
+                <Text style={{
+                  fontSize: 16,
+                  fontWeight: '700',
+                  color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood,
+                  marginBottom: 12
                 }}>
                   Order History
                 </Text>
-                
+
                 {customerOrdersLoading ? (
-                  <Text style={{ 
-                    color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                    textAlign: 'center', 
-                    paddingVertical: 20 
+                  <Text style={{
+                    color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                    textAlign: 'center',
+                    paddingVertical: 20
                   }}>
                     Loading orders...
                   </Text>
                 ) : customerOrders.length > 0 ? (
                   customerOrders.map(order => (
-                    <View 
-                      key={order.id} 
-                      style={{ 
-                        backgroundColor: isUserDarkMode ? darkPalette.surface : palette.background, 
-                        padding: 14, 
+                    <View
+                      key={order.id}
+                      style={{
+                        backgroundColor: isUserDarkMode ? darkPalette.surface : palette.background,
+                        padding: 14,
                         borderRadius: 8,
                         marginBottom: 12,
                         borderWidth: 1,
@@ -4532,48 +4522,48 @@ const fetchFooterData = async () => {
                       }}
                     >
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-                        <Text style={{ 
-                          fontSize: 13, 
-                          fontWeight: '700', 
-                          color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood 
+                        <Text style={{
+                          fontSize: 13,
+                          fontWeight: '700',
+                          color: isUserDarkMode ? darkPalette.oxblood : palette.oxblood
                         }}>
                           Order #{order.id.substring(0, 8)}
                         </Text>
-                        <Text style={{ 
-                          fontSize: 12, 
-                          color: isUserDarkMode ? darkPalette.secondary : palette.secondary 
+                        <Text style={{
+                          fontSize: 12,
+                          color: isUserDarkMode ? darkPalette.secondary : palette.secondary
                         }}>
                           {new Date(order.created_at).toLocaleDateString()}
                         </Text>
                       </View>
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-                        <Text style={{ 
-                          fontSize: 12, 
-                          color: isUserDarkMode ? darkPalette.secondary : palette.secondary 
+                        <Text style={{
+                          fontSize: 12,
+                          color: isUserDarkMode ? darkPalette.secondary : palette.secondary
                         }}>Status: {order.status}</Text>
-                        <Text style={{ 
-                          fontSize: 13, 
-                          fontWeight: '700', 
-                          color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal 
+                        <Text style={{
+                          fontSize: 13,
+                          fontWeight: '700',
+                          color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal
                         }}>
                           {formatMoney(order.total, currency)}
                         </Text>
                       </View>
-                      
+
                       {/* Product Images */}
                       {order.order_items && order.order_items.length > 0 && (
-                        <View style={{ 
-                          marginTop: 12, 
-                          borderTopWidth: 1, 
-                          borderTopColor: isUserDarkMode ? '#333' : '#E0E0E0', 
-                          paddingTop: 12 
+                        <View style={{
+                          marginTop: 12,
+                          borderTopWidth: 1,
+                          borderTopColor: isUserDarkMode ? '#333' : '#E0E0E0',
+                          paddingTop: 12
                         }}>
-                          <Text style={{ 
-                            fontSize: 11, 
-                            fontWeight: '700', 
-                            color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                            marginBottom: 8, 
-                            letterSpacing: 0.5 
+                          <Text style={{
+                            fontSize: 11,
+                            fontWeight: '700',
+                            color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                            marginBottom: 8,
+                            letterSpacing: 0.5
                           }}>
                             ITEMS ({order.order_items.length})
                           </Text>
@@ -4583,26 +4573,26 @@ const fetchFooterData = async () => {
                               const product = productCards.find(p => p.id === item.product_id);
                               const imageUrl = item.product_image || product?.image || 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=200&q=80';
                               const productName = item.product_name || product?.name || 'Product';
-                              
+
                               return (
                                 <View key={idx} style={{ alignItems: 'center', width: 70 }}>
-                                  <Image 
-                                    source={{ uri: imageUrl }} 
-                                    style={{ 
-                                      width: 60, 
-                                      height: 60, 
-                                      borderRadius: 8, 
-                                      backgroundColor: isUserDarkMode ? '#2A2A2A' : '#f5f5f5', 
-                                      borderWidth: 1, 
-                                      borderColor: isUserDarkMode ? '#444' : 'rgba(0,0,0,0.08)' 
-                                    }} 
+                                  <Image
+                                    source={{ uri: imageUrl }}
+                                    style={{
+                                      width: 60,
+                                      height: 60,
+                                      borderRadius: 8,
+                                      backgroundColor: isUserDarkMode ? '#2A2A2A' : '#f5f5f5',
+                                      borderWidth: 1,
+                                      borderColor: isUserDarkMode ? '#444' : 'rgba(0,0,0,0.08)'
+                                    }}
                                     resizeMode="cover"
                                   />
-                                  <Text 
-                                    style={{ 
-                                      fontSize: 10, 
-                                      color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal, 
-                                      marginTop: 4, 
+                                  <Text
+                                    style={{
+                                      fontSize: 10,
+                                      color: isUserDarkMode ? darkPalette.charcoal : palette.charcoal,
+                                      marginTop: 4,
                                       fontWeight: '600',
                                       textAlign: 'center'
                                     }}
@@ -4610,10 +4600,10 @@ const fetchFooterData = async () => {
                                   >
                                     {productName}
                                   </Text>
-                                  <Text style={{ 
-                                    fontSize: 9, 
-                                    color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                                    marginTop: 2 
+                                  <Text style={{
+                                    fontSize: 9,
+                                    color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                                    marginTop: 2
                                   }}>
                                     Qty: {item.quantity}
                                   </Text>
@@ -4626,10 +4616,10 @@ const fetchFooterData = async () => {
                     </View>
                   ))
                 ) : (
-                  <Text style={{ 
-                    color: isUserDarkMode ? darkPalette.secondary : palette.secondary, 
-                    textAlign: 'center', 
-                    paddingVertical: 20 
+                  <Text style={{
+                    color: isUserDarkMode ? darkPalette.secondary : palette.secondary,
+                    textAlign: 'center',
+                    paddingVertical: 20
                   }}>
                     No orders yet. Start shopping!
                   </Text>
@@ -4637,10 +4627,10 @@ const fetchFooterData = async () => {
               </View>
             </ScrollView>
 
-            <View style={{ 
-              padding: 20, 
-              borderTopWidth: 1, 
-              borderTopColor: isUserDarkMode ? '#333' : '#E0E0E0' 
+            <View style={{
+              padding: 20,
+              borderTopWidth: 1,
+              borderTopColor: isUserDarkMode ? '#333' : '#E0E0E0'
             }}>
               <Pressable
                 style={{
@@ -4769,12 +4759,11 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   hero: {
-    marginHorizontal: 0,
-    marginVertical: 8,
-    backgroundColor: '#f0f0f0',
+    margin: 16,
+    backgroundColor: '#000',
     overflow: 'hidden',
     justifyContent: 'flex-end',
-    height: 400,
+    aspectRatio: 16 / 9,
     width: '100%',
     alignSelf: 'center',
   },
