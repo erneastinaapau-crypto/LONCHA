@@ -3197,7 +3197,7 @@ const fetchFooterData = async () => {
                     height: '100%',
                     objectFit: 'cover',
                     display: 'block',
-                    opacity: 0.72,
+                    opacity: 1,
                   }
                 })
               ) : (
@@ -4737,9 +4737,9 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   hero: {
-    height: 510,
+    height: 320,
     margin: 16,
-    backgroundColor: palette.oxblood,
+    backgroundColor: '#000',
     overflow: 'hidden',
     justifyContent: 'flex-end',
   },
@@ -4747,11 +4747,11 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     width: '100%',
     height: '100%',
-    opacity: 0.72,
+    opacity: 1,
   },
   heroOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(33, 0, 0, 0.35)',
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
   },
   heroTextWrap: {
     padding: 20,

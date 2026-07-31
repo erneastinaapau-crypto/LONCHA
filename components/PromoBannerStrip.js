@@ -45,7 +45,7 @@ export default function PromoBannerStrip({ onBannerPress }) {
   const cardWidth = (width - horizontalPadding - totalGaps) / numCards;
   
   // Reduced height for phone
-  const cardHeight = isPhone ? 160 : 220;
+  const cardHeight = isPhone ? 110 : 150;
 
   useEffect(() => {
     fetchPromoBanners();
@@ -145,7 +145,7 @@ export default function PromoBannerStrip({ onBannerPress }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 16,
+    marginVertical: 8,
   },
   loadingContainer: {
     flexDirection: 'row',
