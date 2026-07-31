@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Animated,
   Image,
+  ImageBackground,
   Modal,
   Pressable,
   SafeAreaView,
@@ -3219,6 +3220,53 @@ const fetchFooterData = async () => {
               />
             )
           ) : null}
+
+          {/* === BLURRED BACKDROP PATTERN === */}
+          {/* Layer 1: Blurred background (same image/video, stretched + blurred) */}
+          {heroMedia.length > 0 && (() => {
+            const item = heroMedia[currentHeroSlide];
+            const isVideo = item?.type?.toLowerCase() === 'video' || /\.(mp4|webm|mov|ogg)$/i.test(item?.uri || '');
+            if (isVideo) {
+              return Platform.OS === 'web' ? (
+                React.createElement('div', {
+                  style: {
+                    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                    overflow: 'hidden',
+                  }
+                },
+                  React.createElement('video', {
+                    src: item?.uri,
+                    autoPlay: true, loop: true, muted: true, playsInline: true,
+                    style: {
+                      position: 'absolute', top: 0, left: 0,
+                      width: '100%', height: '100%',
+                      objectFit: 'cover',
+                      filter: 'blur(20px)',
+                      transform: 'scale(1.1)',
+                      opacity: 0.8,
+                    }
+                  }),
+                  React.createElement('div', {
+                    style: {
+                      position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                      backgroundColor: 'rgba(255,255,255,0.25)',
+                    }
+                  })
+                )
+              ) : null;
+            } else {
+              return (
+                <ImageBackground
+                  source={{ uri: item?.uri }}
+                  style={StyleSheet.absoluteFillObject}
+                  blurRadius={50}
+                  resizeMode="cover"
+                >
+                  <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.25)' }} />
+                </ImageBackground>
+              );
+            }
+          })()}
 
           {/* Dark overlay for text readability */}
           <View style={styles.heroOverlay} />

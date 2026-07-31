@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, Pressable, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, Image, ImageBackground, StyleSheet, Pressable, ScrollView, useWindowDimensions } from 'react-native';
 import { supabase } from '../lib/supabase';
 
 const FALLBACK_BANNERS = [
@@ -100,15 +100,22 @@ export default function PromoBannerStrip({ onBannerPress }) {
             accessibilityRole="button"
             accessibilityLabel={`${banner.promo_label}: ${banner.title}`}
           >
-            {/* Background Image */}
+            {/* Layer 1: Blurred background */}
+            <ImageBackground
+              source={{ uri: banner.image_url }}
+              style={StyleSheet.absoluteFillObject}
+              blurRadius={50}
+              resizeMode="cover"
+            >
+              <View style={styles.blurOverlay} />
+            </ImageBackground>
+
+            {/* Layer 2: Sharp centered foreground image */}
             <Image
               source={{ uri: banner.image_url }}
               style={styles.bannerImage}
-              resizeMode="cover"
+              resizeMode="contain"
             />
-
-            {/* Dark Overlay */}
-            <View style={styles.overlay} />
 
             {/* Promo Label Badge (Top-Left) */}
             <View
@@ -173,11 +180,24 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
   },
   bannerImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     width: '100%',
     height: '100%',
+    zIndex: 1,
+  },
+  blurOverlay: {
     position: 'absolute',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -195,6 +215,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
+    zIndex: 2,
   },
   promoBadgeText: {
     color: '#FFFFFF',
@@ -209,6 +230,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: 14,
+    zIndex: 2,
   },
   bannerTitle: {
     fontSize: 16,
