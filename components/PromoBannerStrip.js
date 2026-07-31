@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, Pressable, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, Image, ImageBackground, StyleSheet, Pressable, ScrollView, useWindowDimensions, Platform } from 'react-native';
 import { supabase } from '../lib/supabase';
 
 const FALLBACK_BANNERS = [
@@ -100,15 +100,32 @@ export default function PromoBannerStrip({ onBannerPress }) {
             accessibilityRole="button"
             accessibilityLabel={`${banner.promo_label}: ${banner.title}`}
           >
-            {/* LAYER 1 (bottom): Blurred backdrop */}
-            <ImageBackground
-              source={{ uri: banner.image_url }}
-              style={{ ...StyleSheet.absoluteFillObject, zIndex: 0 }}
-              blurRadius={50}
-              resizeMode="cover"
-            >
-              <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.15)' }} />
-            </ImageBackground>
+            {/* LAYER 1 (bottom): Blurred backdrop - web uses CSS filter, native uses blurRadius */}
+            {Platform.OS === 'web' ? (
+              <View style={{ ...StyleSheet.absoluteFillObject, overflow: 'hidden', zIndex: 0 }}>
+                <Image
+                  source={{ uri: banner.image_url }}
+                  style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    width: '100%', height: '100%',
+                    filter: 'blur(18px)',
+                    transform: [{ scale: 1.12 }],
+                  }}
+                  resizeMode="cover"
+                />
+                <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.15)' }} />
+              </View>
+            ) : (
+              <ImageBackground
+                source={{ uri: banner.image_url }}
+                style={{ ...StyleSheet.absoluteFillObject, zIndex: 0 }}
+                blurRadius={50}
+                resizeMode="cover"
+              >
+                <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.15)' }} />
+              </ImageBackground>
+            )}
 
             {/* LAYER 2: Sharp centered foreground image */}
             <Image
