@@ -917,13 +917,15 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (heroMedia.length > 0) {
-      const timer = setInterval(() => {
-        setCurrentHeroSlide((prev) => (prev + 1) % heroMedia.length);
-      }, 4000);
-      return () => clearInterval(timer);
-    }
-  }, [heroMedia]);
+    if (heroMedia.length <= 1) return;
+    // Read duration from Supabase per slide — defaults to 5 seconds if not set
+    const currentItem = heroMedia[currentHeroSlide];
+    const slideDuration = Number(currentItem?.duration) || 5000;
+    const timer = setTimeout(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroMedia.length);
+    }, slideDuration);
+    return () => clearTimeout(timer);
+  }, [heroMedia, currentHeroSlide]);
 
   const fetchCustomerOrders = async () => {
     if (!user) {
