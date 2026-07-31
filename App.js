@@ -3394,7 +3394,7 @@ const fetchFooterData = async () => {
           style={[styles.navItem, currentPage === 'shop' && styles.navActive]}
           onPress={() => setCurrentPage('shop')}
         >
-          <FontAwesome name="home" size={20} color={currentPage === 'shop' ? palette.oxblood : '#888'} />
+          <FontAwesome name="home" size={22} color={currentPage === 'shop' ? '#fff' : '#888'} />
           <Text style={[styles.navLabel, currentPage === 'shop' && styles.navLabelActive]}>Shop</Text>
         </Pressable>
 
@@ -3403,7 +3403,7 @@ const fetchFooterData = async () => {
           style={[styles.navItem, cartModalVisible && styles.navActive]}
           onPress={openCart}
         >
-          <FontAwesome name="shopping-cart" size={20} color={cartModalVisible ? palette.oxblood : '#888'} />
+          <FontAwesome name="shopping-cart" size={22} color={cartModalVisible ? '#fff' : '#888'} />
           <Text style={[styles.navLabel, cartModalVisible && styles.navLabelActive]}>Cart</Text>
         </Pressable>
 
@@ -3420,7 +3420,7 @@ const fetchFooterData = async () => {
             }
           }}
         >
-          <FontAwesome name="user" size={20} color={userAccountSheetVisible ? palette.oxblood : '#888'} />
+          <FontAwesome name="user" size={22} color={userAccountSheetVisible ? '#fff' : '#888'} />
           <Text style={[styles.navLabel, userAccountSheetVisible && styles.navLabelActive]}>
             {user ? 'Account' : 'Sign In'}
           </Text>
@@ -5633,10 +5633,11 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(27,28,28,0.08)',
   },
   navItem: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
     alignItems: 'center',
     borderRadius: 999,
+    minWidth: 64,
   },
   navActive: {
     backgroundColor: '#4A0404',
@@ -5654,6 +5655,7 @@ const styles = StyleSheet.create({
     color: '#636263',
     fontSize: 10,
     fontWeight: '700',
+    marginTop: 2,
   },
   navLabelActive: {
     color: '#fff',

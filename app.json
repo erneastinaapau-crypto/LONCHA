@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "LONCHA",
-    "slug": "loncha",
+    "name": "POPCU",
+    "slug": "popcu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "scheme": "loncha",
+    "scheme": "popcu",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -14,15 +14,15 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.loncha.app",
+      "bundleIdentifier": "com.popcu.app",
       "buildNumber": "1",
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Allow LONCHA to access your photos.",
-        "NSCameraUsageDescription": "Allow LONCHA to use your camera."
+        "NSPhotoLibraryUsageDescription": "Allow POPCU to access your photos.",
+        "NSCameraUsageDescription": "Allow POPCU to use your camera."
       }
     },
     "android": {
-      "package": "com.loncha.app",
+      "package": "com.popcu.app",
       "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#4A0404",
@@ -39,9 +39,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "name": "LONCHA",
-      "shortName": "LONCHA",
-      "description": "Premium modern kitchen design and interior solutions. Shop the finest kitchen designs at LONCHA."
+      "name": "POPCU",
+      "shortName": "POPCU",
+      "description": "Shop the latest trending products at POPCU."
     },
     "extra": {
       "eas": {
