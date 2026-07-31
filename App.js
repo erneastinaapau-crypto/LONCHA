@@ -3219,6 +3219,31 @@ const fetchFooterData = async () => {
               />
             )
           ) : null}
+
+          {/* Dark overlay for text readability */}
+          <View style={styles.heroOverlay} />
+
+          {/* Supabase text content */}
+          <Animated.View style={[styles.heroTextWrap, { opacity: reveal, transform: [{ translateY: lift }] }]}>
+            {!!heroMedia[currentHeroSlide]?.kicker && (
+              <Text style={styles.kicker}>{heroMedia[currentHeroSlide].kicker}</Text>
+            )}
+            {!!heroMedia[currentHeroSlide]?.hero_title && (
+              <Text style={styles.heroTitle}>{heroMedia[currentHeroSlide].hero_title}</Text>
+            )}
+            {!!heroMedia[currentHeroSlide]?.hero_body && (
+              <Text style={styles.heroBody}>{heroMedia[currentHeroSlide].hero_body}</Text>
+            )}
+            {!!heroMedia[currentHeroSlide]?.button_text_primary && (
+              <View style={styles.heroActionsRow}>
+                <Pressable style={styles.heroBtn} onPress={() => setCurrentPage('shop')}>
+                  <Text style={styles.heroBtnText}>{heroMedia[currentHeroSlide].button_text_primary}</Text>
+                </Pressable>
+              </View>
+            )}
+          </Animated.View>
+
+          {/* Slide indicator dots */}
           <View style={{position: 'absolute', bottom: 16, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 8}}>
             {heroMedia.map((_, i) => (
               <View key={i} style={{width: i === currentHeroSlide ? 24 : 8, height: 8, borderRadius: 4, backgroundColor: i === currentHeroSlide ? '#fff' : 'rgba(255,255,255,0.4)', transition: 'all 0.3s ease'}} />
