@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -14,7 +14,10 @@ import {
   useWindowDimensions,
   View,
   Linking,
+  Platform,
 } from 'react-native';
+import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
+import { WebView } from 'react-native-webview';
 import { supabase } from './lib/supabase';
 import CarouselComponent from './components/CarouselComponent';
 import ProductDetail from './components/ProductDetail';
@@ -59,19 +62,15 @@ const getBadgeColor = (label) => {
 };
 
 const fallbackChips = [
-  'Modern Kitchens',
-  'Kitchen Cabinets',
-  'Countertops',
-  'Kitchen Islands',
-  'Backsplashes',
-  'Interior Design',
-  'Living Room',
-  'Bedroom',
-  'Bathroom',
-  'Office',
-  'Lighting',
-  'Furniture',
-  'Decor',
+  'Car Chargers & Mounts',
+  'Data & Charging Cables',
+  'Earphones & Speakers',
+  'Fast Charger Sets',
+  'Handheld Mini Fans',
+  'Phone & Laptop Stands',
+  'Phones & Tablets',
+  'Power Banks',
+  'Smart Ai Glasses',
 ];
 const weightOptions = ['US 7', 'US 8', 'US 9', 'US 10', 'US 11'];
 const weightMultipliers = {
@@ -885,19 +884,46 @@ const fetchFooterData = async () => {
     }
   }, [currentPage, user]);
 
+  const [heroMedia, setHeroMedia] = useState([]);
+  const [heroLoading, setHeroLoading] = useState(true);
+
+  const fetchHeroMedia = async () => {
+    console.log('🔄 Fetching hero media from Supabase...');
+    try {
+      const { data, error } = await supabase
+        .from('hero_media')
+        .select('*')
+        .eq('is_active', true)
+        .order('position', { ascending: true });
+
+      if (error) {
+        console.error('❌ Error fetching hero media:', error);
+        setHeroMedia([]);
+      } else {
+        console.log('✅ Hero media fetched:', data?.length || 0, 'items');
+        console.log('📋 Hero media data:', JSON.stringify(data, null, 2));
+        setHeroMedia(data || []);
+      }
+    } catch (err) {
+      console.error('❌ Exception fetching hero media:', err);
+      setHeroMedia([]);
+    } finally {
+      setHeroLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentHeroSlide((prev) => (prev + 1) % 4);
-    }, 4000);
-    return () => clearInterval(timer);
+    fetchHeroMedia();
   }, []);
 
-  const HERO_IMAGES = [
-    'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9ff?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1543163521-1bf539e0cf6d?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=1200&q=80'
-  ];
+  useEffect(() => {
+    if (heroMedia.length > 0) {
+      const timer = setInterval(() => {
+        setCurrentHeroSlide((prev) => (prev + 1) % heroMedia.length);
+      }, 4000);
+      return () => clearInterval(timer);
+    }
+  }, [heroMedia]);
 
   const fetchCustomerOrders = async () => {
     if (!user) {
@@ -3150,30 +3176,67 @@ const fetchFooterData = async () => {
       ) : (
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.hero}>
-          <Image
-            source={{ uri: HERO_IMAGES[currentHeroSlide] }}
-            style={styles.heroImage}
-          />
+          {heroLoading ? (
+            <View style={[styles.heroImage, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f0f0' }]}>
+              <ActivityIndicator size="large" color={palette.oxblood} />
+            </View>
+          ) : heroMedia.length > 0 ? (
+            (() => { const item = heroMedia[currentHeroSlide]; const isVideo = item?.type?.toLowerCase() === 'video' || /\.(mp4|webm|mov|ogg)$/i.test(item?.uri || ''); return isVideo; })() ? (
+              Platform.OS === 'web' ? (
+                React.createElement('video', {
+                  autoPlay: true,
+                  loop: true,
+                  muted: true,
+                  playsInline: true,
+                  src: heroMedia[currentHeroSlide]?.uri,
+                  style: {
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                    opacity: 0.72,
+                  }
+                })
+              ) : (
+                <Video
+                  source={{ uri: heroMedia[currentHeroSlide]?.uri }}
+                  style={styles.heroImage}
+                  useNativeControls={false}
+                  resizeMode={ResizeMode.COVER}
+                  isLooping
+                  shouldPlay
+                  isMuted
+                />
+              )
+            ) : (
+              <Image
+                source={{ uri: heroMedia[currentHeroSlide]?.uri }}
+                style={styles.heroImage}
+              />
+            )
+          ) : null}
           <View style={styles.heroOverlay} />
           <Animated.View style={[styles.heroTextWrap, { opacity: reveal, transform: [{ translateY: lift }] }]}>
-            <Text style={styles.kicker}>Osebo-Shoes</Text>
-            <Text style={styles.heroTitle}>Step Into Style,{`\n`}Walk in Confidence.</Text>
+            <Text style={styles.kicker}>{heroMedia[currentHeroSlide]?.kicker || ''}</Text>
+            <Text style={styles.heroTitle}>{heroMedia[currentHeroSlide]?.hero_title || ''}</Text>
             <Text style={styles.heroBody}>
-              Premium footwear for every occasion. Discover the finest collection of
-              shoes, sneakers and sandals — proudly available at Osebo-Shoes.
+              {heroMedia[currentHeroSlide]?.hero_body || ''}
             </Text>
             <View style={styles.heroActionsRow}>
               <Pressable style={styles.heroBtn} onPress={() => setCurrentPage('shop')}>
-                <Text style={styles.heroBtnText}>SHOP NOW</Text>
+                <Text style={styles.heroBtnText}>{heroMedia[currentHeroSlide]?.button_text_primary || 'SHOP NOW'}</Text>
               </Pressable>
               <Pressable style={styles.heroOutlineBtn} onPress={openCart}>
-                <Text style={styles.heroOutlineBtnText}>VIEW CART</Text>
+                <Text style={styles.heroOutlineBtnText}>{heroMedia[currentHeroSlide]?.button_text_secondary || 'VIEW CART'}</Text>
               </Pressable>
             </View>
           </Animated.View>
 
           <View style={{position: 'absolute', bottom: 24, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 8}}>
-            {HERO_IMAGES.map((_, i) => (
+            {heroMedia.map((_, i) => (
               <View key={i} style={{width: i === currentHeroSlide ? 24 : 8, height: 8, borderRadius: 4, backgroundColor: i === currentHeroSlide ? '#fff' : 'rgba(255,255,255,0.4)', transition: 'all 0.3s ease'}} />
             ))}
           </View>
@@ -3203,8 +3266,8 @@ const fetchFooterData = async () => {
                   active && styles.chipActive,
                   isMobileOrTablet && { paddingHorizontal: 12, paddingVertical: 6, minHeight: 30 },
                   !active && { 
-                    borderColor: isUserDarkMode ? '#444' : 'rgba(27,28,28,0.18)',
-                    backgroundColor: isUserDarkMode ? darkPalette.surface : 'transparent'
+                    borderColor: isUserDarkMode ? '#444' : '#E0E0E0',
+                    backgroundColor: isUserDarkMode ? darkPalette.surface : '#FFFFFF'
                   }
                 ]}
               >
@@ -4751,46 +4814,59 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   chipsScrollView: {
-    marginTop: 8,
-    marginBottom: 4,
+    marginTop: 12,
+    marginBottom: 6,
   },
   chipsScrollContent: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 6,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
   chipGridItem: {
-    minHeight: 34,
-    borderWidth: 1,
-    borderColor: 'rgba(27,28,28,0.18)',
-    borderRadius: 999,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chip: {
-    borderWidth: 1,
-    borderColor: 'rgba(27,28,28,0.2)',
+    minHeight: 36,
+    borderWidth: 1.5,
+    borderColor: '#E0E0E0',
     borderRadius: 999,
     paddingHorizontal: 18,
-    paddingVertical: 10,
+    paddingVertical: 9,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  chip: {
+    borderWidth: 1.5,
+    borderColor: '#E0E0E0',
+    borderRadius: 999,
+    paddingHorizontal: 18,
+    paddingVertical: 9,
   },
   chipActive: {
-    backgroundColor: '#28A745',
-    borderColor: '#28A745',
+    backgroundColor: palette.oxblood,
+    borderColor: palette.oxblood,
+    shadowColor: palette.oxblood,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
   },
   chipText: {
-    color: palette.secondary,
+    color: '#5F5E5F',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '600',
     textAlign: 'center',
+    letterSpacing: 0.3,
   },
   chipTextActive: {
     color: '#FFFFFF',
+    fontWeight: '700',
+    letterSpacing: 0.4,
   },
   productGrid: {
     flexDirection: 'row',
