@@ -34,8 +34,7 @@ export default function PromoBannerStrip({ onBannerPress }) {
   const [loading, setLoading] = useState(true);
   const { width } = useWindowDimensions();
   const scrollViewRef = useRef(null);
-  const scrollX = useRef(0);
-  const animationFrameRef = useRef(null);
+  const scrollAnimation = useRef(new Animated.Value(0)).current;
   const isPausedRef = useRef(false);
 
   // Detect phone vs desktop/tablet
@@ -51,55 +50,63 @@ export default function PromoBannerStrip({ onBannerPress }) {
   // Reduced height for phone
   const cardHeight = isPhone ? 110 : 150;
 
-  // Animation speed (pixels per frame)
-  const scrollSpeed = 0.5;
-
   useEffect(() => {
     fetchPromoBanners();
   }, []);
 
-  // Auto-scroll animation
+  // Auto-scroll animation using Animated API
   useEffect(() => {
-    if (loading || !banners || banners.length <= 1) return;
+    if (loading || !banners || banners.length <= 3) return; // Only animate if more than 3 banners
 
-    const animate = () => {
-      if (!isPausedRef.current && scrollViewRef.current) {
-        scrollX.current += scrollSpeed;
+    // Calculate total width of one set of banners
+    const contentWidth = banners.length * (cardWidth + cardGap);
+    
+    // Animation duration - slower = more time to read
+    const animationDuration = contentWidth * 30; // 30ms per pixel
 
-        // Calculate total scrollable width
-        // Each banner is cardWidth + cardGap, except the last one
-        const contentWidth = banners.length * (cardWidth + cardGap);
-        
-        // Reset to start when we've scrolled past half the content
-        // This creates a seamless infinite loop effect
-        if (scrollX.current >= contentWidth / 2) {
-          scrollX.current = 0;
-        }
-
-        scrollViewRef.current.scrollTo({
-          x: scrollX.current,
-          animated: false,
-        });
-      }
-
-      animationFrameRef.current = requestAnimationFrame(animate);
+    const startAnimation = () => {
+      scrollAnimation.setValue(0);
+      
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(scrollAnimation, {
+            toValue: contentWidth,
+            duration: animationDuration,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
     };
 
-    animationFrameRef.current = requestAnimationFrame(animate);
+    if (!isPausedRef.current) {
+      startAnimation();
+    }
 
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      scrollAnimation.stopAnimation();
     };
-  }, [loading, banners, cardWidth, cardGap, scrollSpeed]);
+  }, [loading, banners, cardWidth, cardGap]);
 
   const handlePressIn = () => {
     isPausedRef.current = true;
+    scrollAnimation.stopAnimation();
   };
 
   const handlePressOut = () => {
     isPausedRef.current = false;
+    // Restart animation from current position
+    const contentWidth = banners.length * (cardWidth + cardGap);
+    const animationDuration = contentWidth * 30;
+    
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scrollAnimation, {
+          toValue: contentWidth,
+          duration: animationDuration,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
   };
 
   const fetchPromoBanners = async () => {
@@ -137,28 +144,34 @@ export default function PromoBannerStrip({ onBannerPress }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-        scrollEventThrottle={16}
-        onTouchStart={handlePressIn}
-        onTouchEnd={handlePressOut}
-        onMouseEnter={() => { isPausedRef.current = true; }}
-        onMouseLeave={() => { isPausedRef.current = false; }}
-      >
-        {/* Duplicate banners for seamless infinite scroll */}
-        {[...banners, ...banners].map((banner, index) => (
-          <Pressable
-            key={`${banner.id}-${index}`}
-            style={[styles.bannerCard, { width: cardWidth, height: cardHeight }]}
-            onPress={() => onBannerPress?.(banner)}
-            onPressIn={handlePressIn}
-            onPressOut={handlePressOut}
-            accessibilityRole="button"
-            accessibilityLabel={`${banner.promo_label}: ${banner.title}`}
-          >
+      <View style={{ overflow: 'hidden' }}>
+        <Animated.View
+          style={{
+            flexDirection: 'row',
+            gap: cardGap,
+            paddingHorizontal: 16,
+            transform: [
+              {
+                translateX: scrollAnimation.interpolate({
+                  inputRange: [0, banners.length * (cardWidth + cardGap)],
+                  outputRange: [0, -banners.length * (cardWidth + cardGap)],
+                }),
+              },
+            ],
+          }}
+          onStartShouldSetResponder={() => true}
+          onResponderGrant={handlePressIn}
+          onResponderRelease={handlePressOut}
+        >
+          {/* Duplicate banners for seamless infinite scroll */}
+          {[...banners, ...banners, ...banners].map((banner, index) => (
+            <Pressable
+              key={`${banner.id}-${index}`}
+              style={[styles.bannerCard, { width: cardWidth, height: cardHeight }]}
+              onPress={() => onBannerPress?.(banner)}
+              accessibilityRole="button"
+              accessibilityLabel={`${banner.promo_label}: ${banner.title}`}
+            >
             {/* LAYER 1 (bottom): Blurred backdrop - web uses CSS filter, native uses blurRadius */}
             {Platform.OS === 'web' ? (
               <View style={{ ...StyleSheet.absoluteFillObject, overflow: 'hidden', zIndex: 0 }}>
@@ -224,7 +237,8 @@ export default function PromoBannerStrip({ onBannerPress }) {
             </View>
           </Pressable>
         ))}
-      </ScrollView>
+        </Animated.View>
+      </View>
     </View>
   );
 }
