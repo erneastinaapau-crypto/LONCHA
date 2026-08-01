@@ -925,11 +925,24 @@ export default function App() {
   }, [heroMedia.length]);
 
   // Per-slide timer with max_cycles support
+  // For videos on web: advances when video ends
+  // For images and mobile videos: uses duration field
   useEffect(() => {
     if (!heroPlaying || heroMedia.length <= 1) return;
     const currentItem = heroMedia[currentHeroSlide];
+    const isVideo = currentItem?.type === 'video';
+    const isWeb = Platform.OS === 'web';
+    
+    // For web videos, we'll handle advancement via the video's onEnded event
+    // So we don't set a timer here for web videos
+    if (isVideo && isWeb) {
+      return; // Video will trigger advancement when it ends
+    }
+    
+    // For images and native videos, use the duration
     const slideDuration = Number(currentItem?.duration) || 5000;
     const maxCycles = Number(heroMedia[0]?.max_cycles) || 0;
+    
     const timer = setTimeout(() => {
       const next = (currentHeroSlide + 1) % heroMedia.length;
       // Check if we're about to complete a full cycle (about to wrap back to slide 0)
@@ -945,6 +958,25 @@ export default function App() {
     }, slideDuration);
     return () => clearTimeout(timer);
   }, [heroMedia, currentHeroSlide, heroPlaying]);
+
+  // Handler for when video ends (web platform)
+  const handleVideoEnded = () => {
+    if (!heroPlaying || heroMedia.length <= 1) return;
+    
+    const maxCycles = Number(heroMedia[0]?.max_cycles) || 0;
+    const next = (currentHeroSlide + 1) % heroMedia.length;
+    
+    // Check if we're about to complete a full cycle
+    if (next === 0 && maxCycles > 0) {
+      heroCycleCountRef.current += 1;
+      if (heroCycleCountRef.current >= maxCycles) {
+        // Stop on the last slide instead of wrapping
+        setHeroPlaying(false);
+        return;
+      }
+    }
+    setCurrentHeroSlide(next);
+  };
 
   const fetchCustomerOrders = async () => {
     if (!user) {
@@ -3212,9 +3244,9 @@ export default function App() {
                     <video
                       key={heroMedia[currentHeroSlide]?.uri}
                       autoPlay
-                      loop
                       muted
                       playsInline
+                      onEnded={handleVideoEnded}
                       style={{
                         position: 'absolute',
                         top: 0,
