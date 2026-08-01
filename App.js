@@ -933,11 +933,12 @@ export default function App() {
     const maxCycles = Number(heroMedia[0]?.max_cycles) || 0;
     const timer = setTimeout(() => {
       const next = (currentHeroSlide + 1) % heroMedia.length;
-      // Check if we just completed a full cycle (wrapped back to slide 0)
+      // Check if we're about to complete a full cycle (about to wrap back to slide 0)
       if (next === 0 && maxCycles > 0) {
         heroCycleCountRef.current += 1;
         if (heroCycleCountRef.current >= maxCycles) {
-          setHeroPlaying(false); // stop — max cycles reached
+          // Stop on the last slide instead of wrapping
+          setHeroPlaying(false);
           return;
         }
       }
@@ -3177,6 +3178,17 @@ export default function App() {
                       onPress={() => {
                         if (!customerMsgModal || !customMsgText.trim()) return;
                         let phone = customerMsgModal.phone.replace(/[^0-9]/g, '');
+                        if (phone.startsWith('0')) phone = '233' + phone.substring(1);
+                        const link = `https://wa.me/${phone}?text=${encodeURIComponent(customMsgText.trim())}`;
+                        if (typeof window !== 'undefined') window.open(link, '_blank');
+                        else Linking.openURL(link);
+                        setCustomerMsgModal(null);
+                        setCustomMsgText('');
+                      }}
+                      disabled={!customMsgText.trim()}
+                      style={{ backgroundColor: !customMsgText.trim() ? '#D1D5DB' : '#25D366', borderRadius: 8, padding: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                    >
+                      <FontAwesome name="whatsapp" size={18} color="#fff" />
                       <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>Send via WhatsApp</Text>
                     </Pressable>
                   </View>
@@ -3190,96 +3202,83 @@ export default function App() {
       ) : (
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.hero}>
-            {/* LAYER 1 (bottom): Blurred backdrop - CSS blur for web, blurRadius for native */}
-            {!heroLoading && heroMedia.length > 0 && (() => {
-              const item = heroMedia[currentHeroSlide];
-              const isVideo = item?.type?.toLowerCase() === 'video' || /\.(mp4|webm|mov|ogg)$/i.test(item?.uri || '');
-              if (isVideo && Platform.OS === 'web') {
-                return React.createElement('div', {
-                  style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', zIndex: 0 }
-                },
-                  React.createElement('video', {
-                    src: item?.uri, autoPlay: true, loop: true, muted: true, playsInline: true,
-                    style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(22px)', transform: 'scale(1.12)', opacity: 0.85 }
-                  }),
-                  React.createElement('div', { style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.18)' } })
-                );
-              } else if (!isVideo) {
-                return Platform.OS === 'web' ? (
-                  <View style={{ ...StyleSheet.absoluteFillObject, overflow: 'hidden', zIndex: 0 }}>
-                    <Image
-                      source={{ uri: item?.uri }}
-                      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%', filter: 'blur(22px)', transform: [{ scale: 1.12 }] }}
-                      resizeMode="cover"
-                    />
-                    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.18)' }} />
-                  </View>
-                ) : (
-                  <ImageBackground
-                    source={{ uri: item?.uri }}
-                    style={{ ...StyleSheet.absoluteFillObject, zIndex: 0 }}
-                    blurRadius={50}
-                    resizeMode="cover"
-                  >
-                    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.18)' }} />
-                  </ImageBackground>
-                );
-              }
-              return null;
-            })()}
-
-            {/* LAYER 2: Sharp foreground image/video (zIndex: 1) */}
             {heroLoading ? (
-              <View style={{ ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f0f0', zIndex: 1 }}>
+              <View style={[styles.heroImage, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f0f0' }]}>
                 <ActivityIndicator size="large" color={palette.oxblood} />
               </View>
             ) : heroMedia.length > 0 ? (
-              (() => {
-                const item = heroMedia[currentHeroSlide];
-                const isVideo = item?.type?.toLowerCase() === 'video' || /\.(mp4|webm|mov|ogg)$/i.test(item?.uri || '');
-                if (isVideo) {
-                  return Platform.OS === 'web' ? (
-                    React.createElement('video', {
-                      key: item?.uri, autoPlay: true, loop: true, muted: true, playsInline: true, src: item?.uri,
-                      style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', zIndex: 1 }
-                    })
-                  ) : (
-                    <Video source={{ uri: item?.uri }} style={[styles.heroImage, { zIndex: 1 }]}
-                      useNativeControls={false} resizeMode={ResizeMode.CONTAIN} isLooping shouldPlay isMuted />
-                  );
-                } else {
-                  return <Image source={{ uri: item?.uri }} style={[styles.heroImage, { zIndex: 1 }]} resizeMode="contain" />;
-                }
-              })()
+              heroMedia[currentHeroSlide]?.type === 'video' ? (
+                Platform.OS === 'web' ? (
+                  <WebView
+                    source={{ html: `
+                      <!DOCTYPE html>
+                      <html>
+                      <head>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+                        <style>
+                          * { margin: 0; padding: 0; box-sizing: border-box; }
+                          html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+                          .container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+                          video { max-width: 100%; max-height: 100%; object-fit: cover; }
+                        </style>
+                      </head>
+                      <body>
+                        <div class="container">
+                          <video autoplay loop muted playsinline controls>
+                            <source src="${heroMedia[currentHeroSlide]?.uri}" type="video/mp4">
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+                      </body>
+                      </html>
+                    `}}
+                    style={{ width: '100%', height: 400, backgroundColor: '#000' }}
+                    scrollEnabled={false}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    allowsFullscreenVideo={false}
+                    originWhitelist={['*']}
+                    mediaPlaybackRequiresUserAction={false}
+                    scalesPageToFit={false}
+                  />
+                ) : (
+                  <Video
+                    source={{ uri: heroMedia[currentHeroSlide]?.uri }}
+                    style={styles.heroImage}
+                    useNativeControls={false}
+                    resizeMode={ResizeMode.COVER}
+                    isLooping
+                    shouldPlay
+                    isMuted
+                  />
+                )
+              ) : (
+                <Image
+                  source={{ uri: heroMedia[currentHeroSlide]?.uri }}
+                  style={styles.heroImage}
+                />
+              )
             ) : null}
-
-            {/* Dark overlay for text readability */}
             <View style={styles.heroOverlay} />
-
-            {/* Supabase text content */}
             <Animated.View style={[styles.heroTextWrap, { opacity: reveal, transform: [{ translateY: lift }] }]}>
-              {!!heroMedia[currentHeroSlide]?.kicker && (
-                <Text style={styles.kicker}>{heroMedia[currentHeroSlide].kicker}</Text>
-              )}
-              {!!heroMedia[currentHeroSlide]?.hero_title && (
-                <Text style={styles.heroTitle}>{heroMedia[currentHeroSlide].hero_title}</Text>
-              )}
-              {!!heroMedia[currentHeroSlide]?.hero_body && (
-                <Text style={styles.heroBody}>{heroMedia[currentHeroSlide].hero_body}</Text>
-              )}
-              {!!heroMedia[currentHeroSlide]?.button_text_primary && (
-                <View style={styles.heroActionsRow}>
-                  <Pressable style={styles.heroBtn} onPress={() => setCurrentPage('shop')}>
-                    <Text style={styles.heroBtnText}>{heroMedia[currentHeroSlide].button_text_primary}</Text>
-                  </Pressable>
-                </View>
-              )}
+              <Text style={styles.kicker}>{heroMedia[currentHeroSlide]?.kicker || ''}</Text>
+              <Text style={styles.heroTitle}>{heroMedia[currentHeroSlide]?.hero_title || ''}</Text>
+              <Text style={styles.heroBody}>
+                {heroMedia[currentHeroSlide]?.hero_body || ''}
+              </Text>
+              <View style={styles.heroActionsRow}>
+                <Pressable style={styles.heroBtn} onPress={() => setCurrentPage('shop')}>
+                  <Text style={styles.heroBtnText}>{heroMedia[currentHeroSlide]?.button_text_primary || 'SHOP NOW'}</Text>
+                </Pressable>
+                <Pressable style={styles.heroOutlineBtn} onPress={openCart}>
+                  <Text style={styles.heroOutlineBtnText}>{heroMedia[currentHeroSlide]?.button_text_secondary || 'VIEW CART'}</Text>
+                </Pressable>
+              </View>
             </Animated.View>
 
-            {/* Slide indicator dots */}
-            <View style={{ position: 'absolute', bottom: 16, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+            <View style={{position: 'absolute', bottom: 24, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 8}}>
               {heroMedia.map((_, i) => (
-                <View key={i} style={{ width: i === currentHeroSlide ? 24 : 8, height: 8, borderRadius: 4, backgroundColor: i === currentHeroSlide ? '#fff' : 'rgba(255,255,255,0.4)', transition: 'all 0.3s ease' }} />
+                <View key={i} style={{width: i === currentHeroSlide ? 24 : 8, height: 8, borderRadius: 4, backgroundColor: i === currentHeroSlide ? '#fff' : 'rgba(255,255,255,0.4)', transition: 'all 0.3s ease'}} />
               ))}
             </View>
           </View>
