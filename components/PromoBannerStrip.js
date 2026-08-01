@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ImageBackground, StyleSheet, Pressable, ScrollView, useWindowDimensions, Platform } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, Image, ImageBackground, StyleSheet, Pressable, ScrollView, useWindowDimensions, Platform, Animated } from 'react-native';
 import { supabase } from '../lib/supabase';
 
 const FALLBACK_BANNERS = [
@@ -33,6 +33,10 @@ export default function PromoBannerStrip({ onBannerPress }) {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const { width } = useWindowDimensions();
+  const scrollViewRef = useRef(null);
+  const scrollX = useRef(0);
+  const animationFrameRef = useRef(null);
+  const isPausedRef = useRef(false);
 
   // Detect phone vs desktop/tablet
   const isPhone = width < 768;
@@ -47,9 +51,56 @@ export default function PromoBannerStrip({ onBannerPress }) {
   // Reduced height for phone
   const cardHeight = isPhone ? 110 : 150;
 
+  // Animation speed (pixels per frame)
+  const scrollSpeed = 0.5;
+
   useEffect(() => {
     fetchPromoBanners();
   }, []);
+
+  // Auto-scroll animation
+  useEffect(() => {
+    if (loading || !banners || banners.length <= 1) return;
+
+    const animate = () => {
+      if (!isPausedRef.current && scrollViewRef.current) {
+        scrollX.current += scrollSpeed;
+
+        // Calculate total scrollable width
+        // Each banner is cardWidth + cardGap, except the last one
+        const contentWidth = banners.length * (cardWidth + cardGap);
+        
+        // Reset to start when we've scrolled past half the content
+        // This creates a seamless infinite loop effect
+        if (scrollX.current >= contentWidth / 2) {
+          scrollX.current = 0;
+        }
+
+        scrollViewRef.current.scrollTo({
+          x: scrollX.current,
+          animated: false,
+        });
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [loading, banners, cardWidth, cardGap, scrollSpeed]);
+
+  const handlePressIn = () => {
+    isPausedRef.current = true;
+  };
+
+  const handlePressOut = () => {
+    isPausedRef.current = false;
+  };
 
   const fetchPromoBanners = async () => {
     try {
@@ -87,16 +138,24 @@ export default function PromoBannerStrip({ onBannerPress }) {
   return (
     <View style={styles.container}>
       <ScrollView
+        ref={scrollViewRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
-        centerContent={banners.length <= 3}
+        scrollEventThrottle={16}
+        onTouchStart={handlePressIn}
+        onTouchEnd={handlePressOut}
+        onMouseEnter={() => { isPausedRef.current = true; }}
+        onMouseLeave={() => { isPausedRef.current = false; }}
       >
-        {banners.map((banner) => (
+        {/* Duplicate banners for seamless infinite scroll */}
+        {[...banners, ...banners].map((banner, index) => (
           <Pressable
-            key={banner.id}
+            key={`${banner.id}-${index}`}
             style={[styles.bannerCard, { width: cardWidth, height: cardHeight }]}
             onPress={() => onBannerPress?.(banner)}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
             accessibilityRole="button"
             accessibilityLabel={`${banner.promo_label}: ${banner.title}`}
           >
