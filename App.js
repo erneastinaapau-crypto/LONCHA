@@ -17,7 +17,6 @@ import {
   Platform,
 } from 'react-native';
 import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
-import { WebView } from 'react-native-webview';
 import { supabase } from './lib/supabase';
 import CarouselComponent from './components/CarouselComponent';
 import ProductDetail from './components/ProductDetail';
@@ -3209,38 +3208,22 @@ export default function App() {
             ) : heroMedia.length > 0 ? (
               heroMedia[currentHeroSlide]?.type === 'video' ? (
                 Platform.OS === 'web' ? (
-                  <WebView
-                    source={{ html: `
-                      <!DOCTYPE html>
-                      <html>
-                      <head>
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                        <style>
-                          * { margin: 0; padding: 0; box-sizing: border-box; }
-                          html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
-                          .container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-                          video { max-width: 100%; max-height: 100%; object-fit: cover; }
-                        </style>
-                      </head>
-                      <body>
-                        <div class="container">
-                          <video autoplay loop muted playsinline controls>
-                            <source src="${heroMedia[currentHeroSlide]?.uri}" type="video/mp4">
-                            Your browser does not support the video tag.
-                          </video>
-                        </div>
-                      </body>
-                      </html>
-                    `}}
-                    style={{ width: '100%', height: 400, backgroundColor: '#000' }}
-                    scrollEnabled={false}
-                    javaScriptEnabled={true}
-                    domStorageEnabled={true}
-                    allowsFullscreenVideo={false}
-                    originWhitelist={['*']}
-                    mediaPlaybackRequiresUserAction={false}
-                    scalesPageToFit={false}
-                  />
+                  <video
+                    key={heroMedia[currentHeroSlide]?.uri}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={{
+                      width: '100%',
+                      height: 400,
+                      objectFit: 'cover',
+                      backgroundColor: '#000'
+                    }}
+                  >
+                    <source src={heroMedia[currentHeroSlide]?.uri} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                 ) : (
                   <Video
                     source={{ uri: heroMedia[currentHeroSlide]?.uri }}
