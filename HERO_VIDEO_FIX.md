@@ -36,22 +36,27 @@ Platform.OS === 'web' ? (
 **After (Using native video tag):**
 ```jsx
 Platform.OS === 'web' ? (
-  <video
-    key={heroMedia[currentHeroSlide]?.uri}
-    autoPlay
-    loop
-    muted
-    playsInline
-    style={{
-      width: '100%',
-      height: 400,
-      objectFit: 'cover',
-      backgroundColor: '#000'
-    }}
-  >
-    <source src={heroMedia[currentHeroSlide]?.uri} type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
+  <View style={styles.heroImage}>
+    <video
+      key={heroMedia[currentHeroSlide]?.uri}
+      autoPlay
+      loop
+      muted
+      playsInline
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        backgroundColor: '#000'
+      }}
+    >
+      <source src={heroMedia[currentHeroSlide]?.uri} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </View>
 )
 ```
 
@@ -62,6 +67,13 @@ Platform.OS === 'web' ? (
 3. **Reliability**: Native browser video support with proper autoplay
 4. **Maintenance**: Less code, easier to debug
 5. **Removed Dependency**: No longer need `react-native-webview` import
+6. **Proper Layering**: Video wrapped in View with absolute positioning allows overlay to work correctly
+
+## Important Notes
+
+- The video is wrapped in a `<View style={styles.heroImage}>` container to ensure proper absolute positioning
+- This allows the `heroOverlay` (dark transparent layer) to sit on top of the video
+- Without the View wrapper, the video would be in normal document flow and the overlay wouldn't display correctly
 
 ## Video Attributes
 

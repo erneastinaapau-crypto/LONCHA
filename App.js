@@ -3208,22 +3208,27 @@ export default function App() {
             ) : heroMedia.length > 0 ? (
               heroMedia[currentHeroSlide]?.type === 'video' ? (
                 Platform.OS === 'web' ? (
-                  <video
-                    key={heroMedia[currentHeroSlide]?.uri}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    style={{
-                      width: '100%',
-                      height: 400,
-                      objectFit: 'cover',
-                      backgroundColor: '#000'
-                    }}
-                  >
-                    <source src={heroMedia[currentHeroSlide]?.uri} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  <View style={styles.heroImage}>
+                    <video
+                      key={heroMedia[currentHeroSlide]?.uri}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        backgroundColor: '#000'
+                      }}
+                    >
+                      <source src={heroMedia[currentHeroSlide]?.uri} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </View>
                 ) : (
                   <Video
                     source={{ uri: heroMedia[currentHeroSlide]?.uri }}
