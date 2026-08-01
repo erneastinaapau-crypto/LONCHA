@@ -517,7 +517,7 @@ export default function App() {
   const [customerOrders, setCustomerOrders] = useState([]);
   const [customerOrdersLoading, setCustomerOrdersLoading] = useState(false);
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
-  const [heroCycleCount, setHeroCycleCount] = useState(0); // tracks completed full loops
+  const [heroPlaying, setHeroPlaying] = useState(true); // false = slideshow stopped after max cycles
 
   // Footer Accordion State
   const [expandedFooterSections, setExpandedFooterSections] = useState({
@@ -622,6 +622,7 @@ export default function App() {
   const reveal = useRef(new Animated.Value(0)).current;
   const lift = useRef(new Animated.Value(20)).current;
   const cartBarAnim = useRef(new Animated.Value(0)).current;
+  const heroCycleCountRef = useRef(0); // tracks completed full loops (ref = no re-render)
   const { width } = useWindowDimensions();
 
 
@@ -917,27 +918,33 @@ export default function App() {
     fetchHeroMedia();
   }, []);
 
+  // Reset slideshow when hero data reloads
   useEffect(() => {
-    if (heroMedia.length <= 1) return;
-    // Read per-slide duration from Supabase (ms), default 5s
+    heroCycleCountRef.current = 0;
+    setHeroPlaying(true);
+    setCurrentHeroSlide(0);
+  }, [heroMedia.length]);
+
+  // Per-slide timer with max_cycles support
+  useEffect(() => {
+    if (!heroPlaying || heroMedia.length <= 1) return;
     const currentItem = heroMedia[currentHeroSlide];
     const slideDuration = Number(currentItem?.duration) || 5000;
-    // Read max_cycles from first slide as global setting (0 = infinite)
     const maxCycles = Number(heroMedia[0]?.max_cycles) || 0;
-    // Stop advancing if max cycles reached
-    if (maxCycles > 0 && heroCycleCount >= maxCycles) return;
     const timer = setTimeout(() => {
-      setCurrentHeroSlide((prev) => {
-        const next = (prev + 1) % heroMedia.length;
-        // Completing a full cycle when wrapping back to slide 0
-        if (next === 0) {
-          setHeroCycleCount((c) => c + 1);
+      const next = (currentHeroSlide + 1) % heroMedia.length;
+      // Check if we just completed a full cycle (wrapped back to slide 0)
+      if (next === 0 && maxCycles > 0) {
+        heroCycleCountRef.current += 1;
+        if (heroCycleCountRef.current >= maxCycles) {
+          setHeroPlaying(false); // stop — max cycles reached
+          return;
         }
-        return next;
-      });
+      }
+      setCurrentHeroSlide(next);
     }, slideDuration);
     return () => clearTimeout(timer);
-  }, [heroMedia, currentHeroSlide, heroCycleCount]);
+  }, [heroMedia, currentHeroSlide, heroPlaying]);
 
   const fetchCustomerOrders = async () => {
     if (!user) {
